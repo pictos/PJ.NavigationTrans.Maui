@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="PJ.NavigationTrans.Sample.NewPage1"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:trans="clr-namespace:PJ.NavigationTransitions.Maui;assembly=PJ.NavigationTransitions.Maui"
+	Title="NewPage1">
+	<VerticalStackLayout>
+		<Label
+			HorizontalOptions="Center"
+			Text="THis is Page 1"
+			VerticalOptions="Center" />
+	</VerticalStackLayout>
+</ContentPage>

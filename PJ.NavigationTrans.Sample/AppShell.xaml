@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+	x:Class="PJ.NavigationTrans.Sample.AppShell"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:local="clr-namespace:PJ.NavigationTrans.Sample"
+	xmlns:trans="clr-namespace:PJ.NavigationTransitions.Maui;assembly=PJ.NavigationTransitions.Maui"
+	Title="PJ.NavigationTrans.Sample"
+	Shell.FlyoutBehavior="Flyout">
+
+	<ShellContent
+		Title="Home"
+		ContentTemplate="{DataTemplate local:MainPage}"
+		Route="MainPage" />
+
+	<ShellContent
+		Title="Home"
+		trans:ShellTrans.Duration="500"
+		trans:ShellTrans.Transition="FadeIn"
+		ContentTemplate="{DataTemplate local:NewPage1}"
+		Route="NewPage1" />
+
+
+	<ShellContent
+		Title="Home"
+		trans:ShellTrans.Duration="100"
+		trans:ShellTrans.Transition="BottomIn"
+		ContentTemplate="{DataTemplate local:NewPage2}"
+		Route="NewPage2" />
+
+</Shell>
