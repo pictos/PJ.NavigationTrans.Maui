@@ -1,0 +1,17 @@
+<Project>
+	<PropertyGroup>
+		<NetVersion>net9.0</NetVersion>
+		<MauiPackageVersion>9.0.50</MauiPackageVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+
+		<IsAndroid>false</IsAndroid>
+		<IsIos>false</IsIos>
+
+		<IsAndroid Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">true</IsAndroid>
+		<IsIos Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">true</IsIos>
+	</PropertyGroup>
+</Project>
