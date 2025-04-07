@@ -12,4 +12,8 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<ItemGroup Condition="$(IsAndroid)">
+		<AndroidResource Include="Platforms\Android\Resources\anim\**\*.xml" />
+	</ItemGroup>
+
 </Project>
