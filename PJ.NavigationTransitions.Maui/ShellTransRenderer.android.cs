@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using Android.Animation;
-using AndroidX.Fragment.App;
+﻿using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
 namespace PJ.NavigationTransitions.Maui;
 
-public class ShellTransRenderer : ShellRenderer
+public partial class ShellTransRenderer : ShellRenderer
 {
 
 	public ShellTransRenderer()
@@ -40,24 +38,44 @@ public class ShellTransRenderer : ShellRenderer
 		var fragmentTransaction = manager.BeginTransaction();
 		var aAnimation = animation.ToPlatform();
 
-		
+		var context = Platform.AppContext ?? throw new NullReferenceException();
+
+		var loadedAnimation = Android.Views.Animations.AnimationUtils.LoadAnimation(context, aAnimation)!;
+		loadedAnimation.Duration = duration;
 
 		var currentView = CreateShellItemRenderer(newItem);
 		currentView.ShellItem = newItem;
 
 		fragmentTransaction.SetCustomAnimations(aAnimation, aAnimation);
 		var fragment = currentView.Fragment;
-		fragmentTransaction.Add(targetView.Id, fragment);
 
-		Task.Run(async () =>
-		{
-			await Task.Delay(5_000);
-			var transaction = manager.BeginTransaction();
-			transaction.Replace(fragment.Id, fragment);
-			transaction.CommitAllowingStateLoss();
-		});
+		fragmentTransaction.Add(targetView.Id, fragment);
+		var runnable = new AnimationRunnable(fragment, loadedAnimation);
+		fragmentTransaction.RunOnCommit(runnable);
 
 		fragmentTransaction.CommitAllowingStateLoss();
+	}
+
+	sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
+	{
+		readonly WeakWrapper<Fragment> fragmentWrapper;
+		readonly WeakWrapper<Android.Views.Animations.Animation> animationWrapper;
+
+		public AnimationRunnable(Fragment fragment, Android.Views.Animations.Animation animation)
+		{
+			fragmentWrapper = new(fragment);
+			animationWrapper = new(animation);
+		}
+
+		public void Run()
+		{
+			var animation = animationWrapper.Target;
+
+			if (animation is null)
+				return;
+
+			fragmentWrapper.Target?.View?.StartAnimation(animation);
+		}
 	}
 }
 
@@ -80,32 +98,4 @@ static class AnimationHelpers
 		TransitionType.Default => Resource.Animation.none,
 		_ => Resource.Animation.none,
 	};
-
-	public static ObjectAnimator CreateObjectAnimator(this Android.Views.View targetView, TransitionType transition, bool isEntering, int duration)
-	{
-		ObjectAnimator? animator = null;
-
-		switch (transition)
-		{
-			case TransitionType.FadeIn:
-			case TransitionType.FadeOut:
-				animator = ObjectAnimator.OfFloat(targetView, "alpha", isEntering ? 0f : 1f, isEntering ? 1f : 0f);
-				break;
-			case TransitionType.ScaleIn:
-			case TransitionType.ScaleOut:
-				animator = ObjectAnimator.OfFloat(targetView, "scaleX", isEntering ? 0f : 1f, isEntering ? 1f : 0f)!;
-				animator.SetDuration(duration);
-				animator.Start();
-				animator = ObjectAnimator.OfFloat(targetView, "scaleY", isEntering ? 0f : 1f, isEntering ? 1f : 0f);
-				break;
-				// Add other cases for different transitions if needed
-		}
-
-		Debug.Assert(animator is not null);
-
-		animator.SetDuration(duration);
-		animator.Start();
-
-		return animator;
-	}
 }
