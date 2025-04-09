@@ -17,12 +17,7 @@ public partial class ShellTransRenderer : ShellRenderer
 		return new ShellTransItemRenderer(this);
 	}
 
-	void SetFieldValue()
-	{
-		var fieldInfo = typeof(ShellRenderer).GetField("_currentView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		Debug.Assert(fieldInfo is not null);
-		__currentView = (IShellItemRenderer)fieldInfo.GetValue(this)!;
-	}
+	
 
 	protected override void SwitchFragment(FragmentManager manager, Android.Views.View targetView, ShellItem newItem, bool animate = true)
 	{
@@ -33,7 +28,7 @@ public partial class ShellTransRenderer : ShellRenderer
 		if (!animate || transitionIn == TransitionType.Default)
 		{
 			base.SwitchFragment(manager, targetView, newItem, false);
-			SetFieldValue();
+			AnimationHelpers.SetFieldValue<ShellRenderer, IShellItemRenderer>(this, ref __currentView, "_currentView");
 			return;
 		}
 		var transitionOut = ShellTrans.GetTransitionOut(shellContent);
@@ -47,7 +42,6 @@ public partial class ShellTransRenderer : ShellRenderer
 		__currentView = CreateShellItemRenderer(newItem);
 		__currentView.ShellItem = newItem;
 
-		fragmentTransaction.SetCustomAnimations(animationIn.AnimationId, animationOut.AnimationId);
 		var fragment = __currentView.Fragment;
 		var oldFragment = previousView?.Fragment;
 		fragmentTransaction.Add(targetView.Id, fragment);

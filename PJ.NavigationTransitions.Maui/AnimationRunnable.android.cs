@@ -2,7 +2,6 @@
 
 namespace PJ.NavigationTransitions.Maui;
 
-
 sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 {
 	readonly WeakWrapper<Fragment> fragmentWrapper;

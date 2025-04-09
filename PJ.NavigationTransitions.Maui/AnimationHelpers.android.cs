@@ -25,9 +25,16 @@ static class AnimationHelpers
 	{
 		var animation = transition.ToPlatform();
 		var context = Platform.AppContext ?? throw new NullReferenceException();
-		var loadedAnimation = AAnimationUtils.LoadAnimation(context, animation);
+		var loadedAnimation = Android.Views.Animations.AnimationUtils.LoadAnimation(context, animation);
 		Debug.Assert(loadedAnimation is not null);
 		loadedAnimation.Duration = duration;
-		return new (animation, loadedAnimation);
+		return new(animation, loadedAnimation);
+	}
+
+	public static void SetFieldValue<TOwner, TType>(in TOwner owner, ref TType? target, in string fieldName)
+	{
+		var fieldInfo = typeof(TOwner).GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+		Debug.Assert(fieldInfo is not null);
+		target = (TType?)fieldInfo.GetValue(owner);
 	}
 }

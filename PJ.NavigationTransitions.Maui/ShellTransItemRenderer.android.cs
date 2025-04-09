@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Android.Views;
 using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
@@ -7,77 +6,41 @@ namespace PJ.NavigationTransitions.Maui;
 
 public class ShellTransItemRenderer : ShellItemRenderer
 {
-	Dictionary<Element, IShellObservableFragment> __fragmentMap;
+	Dictionary<Element, IShellObservableFragment>? __fragmentMap;
+	IShellObservableFragment? __currentFragment;
+
 	public ShellTransItemRenderer(IShellContext context) : base(context)
 	{
-		var fieldInfo = typeof(ShellItemRendererBase).GetField("_fragmentMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		Debug.Assert(fieldInfo is not null);
-		__fragmentMap = (Dictionary<Element, IShellObservableFragment>)fieldInfo.GetValue(this)!;
-		Debug.Assert(__fragmentMap is not null);
+		AnimationHelpers.SetFieldValue<ShellItemRendererBase, Dictionary<Element, IShellObservableFragment>>(this, ref __fragmentMap, "_fragmentMap");
 	}
 
 	protected override void SetupAnimation(ShellNavigationSource navSource, FragmentTransaction t, Page page)
 	{
-		base.SetupAnimation(navSource, t, page);
-		var animationIn = ShellTrans.GetTransitionIn(page);
-		var animationOut = ShellTrans.GetTransitionOut(page);
 		var duration = ShellTrans.GetDuration(page);
+		var transactionIn = ShellTrans.GetTransitionIn(page);
+		var transactionOut = ShellTrans.GetTransitionOut(page);
 
-		var animIn = animationIn.ToPlatform(duration);
-		var animOut = animationOut.ToPlatform(duration);
+		var animationIn = transactionIn.ToPlatform(duration);
+		var animationOut = transactionOut.ToPlatform(duration);
+		AnimationHelpers.SetFieldValue<ShellItemRendererBase, IShellObservableFragment>(this, ref __currentFragment, "_currentFragment");
 
-
-		Debug.Assert(animIn.Animation.Duration == duration);
-		Debug.Assert(animOut.Animation.Duration == duration);
-
-		if (!__fragmentMap.ContainsKey(page))
-			__fragmentMap[page] = CreateFragmentForPage(page);
-
-
-		var fragment = __fragmentMap[page].Fragment;
-
-
-		t.RunOnCommit(new NavigationAnimationListener(fragment, ParentFragment!, animIn.Animation, animOut.Animation));
-	}
-
-	internal ViewGroup NavigationTarget() => this.GetNavigationTarget();
-
-
-	sealed class NavigationAnimationListener : Java.Lang.Object, Java.Lang.IRunnable
-	{
-		readonly WeakWrapper<Fragment> _fragmentRef;
-		readonly WeakWrapper<Fragment> _parentFragmentRef;
-		readonly AAnimation _enterAnimation;
-		readonly AAnimation _exitAnimation;
-
-		public NavigationAnimationListener(
-			Fragment fragment,
-			Fragment parentFragment,
-			AAnimation enterAnimation,
-			AAnimation exitAnimation)
+		IShellObservableFragment? observableFragment;
+		Debug.Assert(__fragmentMap is not null);
+		if (!__fragmentMap.TryGetValue(page, out observableFragment))
 		{
-			_fragmentRef = new(fragment);
-			_parentFragmentRef = new(parentFragment);
-			_enterAnimation = enterAnimation;
-			_exitAnimation = exitAnimation;
+			observableFragment = __fragmentMap[page] = CreateFragmentForPage(page);
 		}
 
-		public void Run()
+		var fragment = observableFragment!.Fragment;
+		var oldFragment = __currentFragment?.Fragment;
+
+		if (oldFragment is not null)
 		{
-
-			if (_fragmentRef.Target is not Fragment fragment)
-				return;
-
-			var parent = _parentFragmentRef.Target;
-
-			// Find any visible fragments that should be animated out
-			if (parent is not null)
-			{
-				parent.View!.StartAnimation(_exitAnimation);
-			}
-
-			// Apply enter animation
-			fragment.View!.StartAnimation(_enterAnimation);
+			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
+			t.RunOnCommit(runnableOut);
 		}
+
+		var runnableIn = new AnimationRunnable(fragment, animationIn.Animation);
+		t.RunOnCommit(runnableIn);
 	}
 }
