@@ -1,14 +1,13 @@
 ﻿namespace PJ.NavigationTransitions.Maui;
 
-public partial class ShellTransRenderer
+
+readonly struct WeakWrapper<T> where T : class
 {
-	readonly struct WeakWrapper<T> where T : class
+	WeakReference<T> reference { get; }
+	public WeakWrapper(T value)
 	{
-		WeakReference<T> reference { get; }
-		public WeakWrapper(T value)
-		{
-			reference = new WeakReference<T>(value);
-		}
-		public T? Target => reference.TryGetTarget(out var target) ? target : default;
+		reference = new WeakReference<T>(value);
 	}
+	public T? Target => reference.TryGetTarget(out var target) ? target : default;
 }
+

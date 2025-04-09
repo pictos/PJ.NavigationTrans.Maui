@@ -1,4 +1,5 @@
-﻿using AndroidX.Fragment.App;
+﻿using System.Diagnostics;
+using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
@@ -6,15 +7,9 @@ namespace PJ.NavigationTransitions.Maui;
 
 public partial class ShellTransRenderer : ShellRenderer
 {
-
+	IShellItemRenderer? __currentView;
 	public ShellTransRenderer()
 	{
-		//Element.Navigating += OnElementNavigating;
-	}
-
-	void OnElementNavigating(object? sender, ShellNavigatingEventArgs e)
-	{
-
 	}
 
 	protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
@@ -22,36 +17,49 @@ public partial class ShellTransRenderer : ShellRenderer
 		return new ShellTransItemRenderer(this);
 	}
 
+	void SetFieldValue()
+	{
+		var fieldInfo = typeof(ShellRenderer).GetField("_currentView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+		Debug.Assert(fieldInfo is not null);
+		__currentView = (IShellItemRenderer)fieldInfo.GetValue(this)!;
+	}
+
 	protected override void SwitchFragment(FragmentManager manager, Android.Views.View targetView, ShellItem newItem, bool animate = true)
 	{
+		var previousView = __currentView;
 		var shellContent = newItem.CurrentItem.CurrentItem!;
-		var animation = ShellTrans.GetTransition(shellContent);
+		var transitionIn = ShellTrans.GetTransitionIn(shellContent);
 
-		if (!animate || animation == TransitionType.Default)
+		if (!animate || transitionIn == TransitionType.Default)
 		{
 			base.SwitchFragment(manager, targetView, newItem, false);
+			SetFieldValue();
 			return;
 		}
-
+		var transitionOut = ShellTrans.GetTransitionOut(shellContent);
 		var duration = ShellTrans.GetDuration(shellContent);
 
+		var animationIn = transitionIn.ToPlatform(duration);
+		var animationOut = transitionOut.ToPlatform(duration);
+
 		var fragmentTransaction = manager.BeginTransaction();
-		var aAnimation = animation.ToPlatform();
 
-		var context = Platform.AppContext ?? throw new NullReferenceException();
+		__currentView = CreateShellItemRenderer(newItem);
+		__currentView.ShellItem = newItem;
 
-		var loadedAnimation = Android.Views.Animations.AnimationUtils.LoadAnimation(context, aAnimation)!;
-		loadedAnimation.Duration = duration;
-
-		var currentView = CreateShellItemRenderer(newItem);
-		currentView.ShellItem = newItem;
-
-		fragmentTransaction.SetCustomAnimations(aAnimation, aAnimation);
-		var fragment = currentView.Fragment;
-
+		fragmentTransaction.SetCustomAnimations(animationIn.AnimationId, animationOut.AnimationId);
+		var fragment = __currentView.Fragment;
+		var oldFragment = previousView?.Fragment;
 		fragmentTransaction.Add(targetView.Id, fragment);
-		var runnable = new AnimationRunnable(fragment, loadedAnimation);
-		fragmentTransaction.RunOnCommit(runnable);
+		var runnableIn = new AnimationRunnable(fragment, animationIn.Animation);
+		
+		if (oldFragment is not null)
+		{
+			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
+			fragmentTransaction.RunOnCommit(runnableOut);
+		}
+		
+		fragmentTransaction.RunOnCommit(runnableIn);
 
 		fragmentTransaction.CommitAllowingStateLoss();
 	}
@@ -59,9 +67,9 @@ public partial class ShellTransRenderer : ShellRenderer
 	sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 	{
 		readonly WeakWrapper<Fragment> fragmentWrapper;
-		readonly WeakWrapper<Android.Views.Animations.Animation> animationWrapper;
+		readonly WeakWrapper<AAnimation> animationWrapper;
 
-		public AnimationRunnable(Fragment fragment, Android.Views.Animations.Animation animation)
+		public AnimationRunnable(Fragment fragment, AAnimation animation)
 		{
 			fragmentWrapper = new(fragment);
 			animationWrapper = new(animation);
@@ -77,25 +85,4 @@ public partial class ShellTransRenderer : ShellRenderer
 			fragmentWrapper.Target?.View?.StartAnimation(animation);
 		}
 	}
-}
-
-static class AnimationHelpers
-{
-	public static int ToPlatform(this TransitionType transition) => transition switch
-	{
-		TransitionType.FadeIn => Resource.Animation.fade_in,
-		TransitionType.FadeOut => Resource.Animation.fade_out,
-		TransitionType.BottomIn => Resource.Animation.enter_bottom,
-		TransitionType.BottomOut => Resource.Animation.exit_bottom,
-		TransitionType.TopIn => Resource.Animation.enter_top,
-		TransitionType.TopOut => Resource.Animation.exit_top,
-		TransitionType.LeftIn => Resource.Animation.enter_left,
-		TransitionType.LeftOut => Resource.Animation.exit_left,
-		TransitionType.RightIn => Resource.Animation.enter_right,
-		TransitionType.RightOut => Resource.Animation.exit_right,
-		TransitionType.ScaleIn => Resource.Animation.scale_in,
-		TransitionType.ScaleOut => Resource.Animation.scale_out,
-		TransitionType.Default => Resource.Animation.none,
-		_ => Resource.Animation.none,
-	};
 }

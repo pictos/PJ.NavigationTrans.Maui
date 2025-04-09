@@ -4,14 +4,20 @@ public static class ShellTrans
 	public static readonly BindableProperty DurationProperty =
 		BindableProperty.CreateAttached("Duration", typeof(int), typeof(ShellContent), 500);
 
-	public static int GetDuration(ShellContent view) => (int)view.GetValue(DurationProperty);
+	public static int GetDuration(BindableObject view) => (int)view.GetValue(DurationProperty);
 
-	public static void SetDuration(ShellContent view, int value) => view.SetValue(DurationProperty, value);
+	public static void SetDuration(BindableObject view, int value) => view.SetValue(DurationProperty, value);
 
-	public static readonly BindableProperty TransitionProperty =
-		BindableProperty.CreateAttached("Transition", typeof(TransitionType), typeof(ShellContent), TransitionType.Default);
+	public static readonly BindableProperty TransitionInProperty =
+		BindableProperty.CreateAttached("TransitionIn", typeof(TransitionType), typeof(ShellContent), TransitionType.Default);
 
-	public static TransitionType GetTransition(ShellContent view) => (TransitionType)view.GetValue(TransitionProperty);
+	public static TransitionType GetTransitionIn(BindableObject view) => (TransitionType)view.GetValue(TransitionInProperty);
 
-	public static void SetTransition(ShellContent view, TransitionType value) => view.SetValue(TransitionProperty, value);
+	public static void SetTransitionIn(BindableObject view, TransitionType value) => view.SetValue(TransitionInProperty, value);
+
+	public static readonly BindableProperty TransitionOutProperty =
+		BindableProperty.CreateAttached("TransitionOut", typeof(TransitionType), typeof(ShellContent), TransitionType.Default);
+
+	public static TransitionType GetTransitionOut(BindableObject view) => (TransitionType)view.GetValue(TransitionOutProperty);
+	public static void SetTransitionOut(BindableObject view, TransitionType value) => view.SetValue(TransitionOutProperty, value);
 }

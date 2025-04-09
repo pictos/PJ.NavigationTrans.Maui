@@ -15,3 +15,7 @@ public enum TransitionType
 	BottomIn,
 	BottomOut
 }
+
+#if ANDROID
+readonly record struct AnimationInfo(int AnimationId, AAnimation Animation);
+#endif
