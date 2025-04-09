@@ -16,5 +16,17 @@ public partial class MainPage : ContentPage
 	{
 		Shell.Current.GoToAsync("//" + nameof(NewPage2));
 	}
+
+	void Button_Clicked_2(object sender, EventArgs e)
+	{
+
+		Shell.Current.GoToAsync(nameof(NewPage1));
+	}
+
+	void Button_Clicked_3(object sender, EventArgs e)
+	{
+		Shell.Current.GoToAsync(nameof(NewPage2));
+
+	}
 }
 

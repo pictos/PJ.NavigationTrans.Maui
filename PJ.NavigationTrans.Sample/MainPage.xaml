@@ -8,6 +8,12 @@
 		<VerticalStackLayout Padding="30,0" Spacing="25">
 			<Button Clicked="Button_Clicked" Text="Navigate to Page 1" />
 			<Button Clicked="Button_Clicked_1" Text="Navigate to Page 2" />
+
+			<ContentView HeightRequest="30" />
+
+			<Button Clicked="Button_Clicked_2" Text="Navigate to Page 1 keeping the stack" />
+
+			<Button Clicked="Button_Clicked_3" Text="Navigate to Page 2 keeping the stack" />
 		</VerticalStackLayout>
 	</ScrollView>
 

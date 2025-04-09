@@ -16,15 +16,16 @@
 	<ShellContent
 		Title="Home"
 		trans:ShellTrans.Duration="500"
-		trans:ShellTrans.Transition="FadeIn"
+		trans:ShellTrans.TransitionIn="FadeIn"
+		trans:ShellTrans.TransitionOut="FadeOut"
 		ContentTemplate="{DataTemplate local:NewPage1}"
 		Route="NewPage1" />
 
-
 	<ShellContent
 		Title="Home"
-		trans:ShellTrans.Duration="100"
-		trans:ShellTrans.Transition="BottomIn"
+		trans:ShellTrans.Duration="10000"
+		trans:ShellTrans.TransitionIn="BottomIn"
+		trans:ShellTrans.TransitionOut="TopOut"
 		ContentTemplate="{DataTemplate local:NewPage2}"
 		Route="NewPage2" />
 
