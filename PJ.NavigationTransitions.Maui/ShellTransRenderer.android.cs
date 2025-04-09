@@ -17,8 +17,6 @@ public partial class ShellTransRenderer : ShellRenderer
 		return new ShellTransItemRenderer(this);
 	}
 
-	
-
 	protected override void SwitchFragment(FragmentManager manager, Android.Views.View targetView, ShellItem newItem, bool animate = true)
 	{
 		var previousView = __currentView;
@@ -56,27 +54,5 @@ public partial class ShellTransRenderer : ShellRenderer
 		fragmentTransaction.RunOnCommit(runnableIn);
 
 		fragmentTransaction.CommitAllowingStateLoss();
-	}
-
-	sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
-	{
-		readonly WeakWrapper<Fragment> fragmentWrapper;
-		readonly WeakWrapper<AAnimation> animationWrapper;
-
-		public AnimationRunnable(Fragment fragment, AAnimation animation)
-		{
-			fragmentWrapper = new(fragment);
-			animationWrapper = new(animation);
-		}
-
-		public void Run()
-		{
-			var animation = animationWrapper.Target;
-
-			if (animation is null)
-				return;
-
-			fragmentWrapper.Target?.View?.StartAnimation(animation);
-		}
 	}
 }
