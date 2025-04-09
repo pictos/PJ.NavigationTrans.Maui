@@ -33,7 +33,7 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 		var fragment = observableFragment!.Fragment;
 		var oldFragment = __currentFragment?.Fragment;
-
+		//t.Add(GetNavigationTarget().Id, fragment);
 		if (oldFragment is not null)
 		{
 			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);

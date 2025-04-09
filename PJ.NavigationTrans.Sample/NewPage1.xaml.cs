@@ -8,8 +8,14 @@ public partial class NewPage1 : ContentPage
 	{
 		InitializeComponent();
 
-		ShellTrans.SetTransitionIn(this, TransitionType.BottomIn);
-		ShellTrans.SetTransitionOut(this, TransitionType.TopOut);
-		ShellTrans.SetDuration(this, 5000);
+		ShellTrans.SetTransitionIn(this, TransitionType.TopIn);
+		ShellTrans.SetTransitionOut(this, TransitionType.BottomOut);
+		ShellTrans.SetDuration(this, 2000);
+
+
+		var tap = new TapGestureRecognizer();
+		tap.Tapped += (_, __) => Shell.Current.GoToAsync("..", true);
+
+		this.Content.GestureRecognizers.Add(tap);
 	}
 }
