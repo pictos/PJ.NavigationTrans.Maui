@@ -1,5 +1,6 @@
 ﻿using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Platform.Compatibility;
+using Microsoft.Maui.Platform;
 
 namespace PJ.NavigationTransitions.Maui;
 
@@ -122,12 +123,11 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		var destinationFragment = currentFragment?.Fragment;
 		var fragmentOrigin = target.Fragment;
 
-		
 		if (animated)
 		{
-			SetupAnimationImpl(navSource, t, page, destinationFragment, fragmentOrigin);
+			SetupAnimationImpl(t, page, destinationFragment, fragmentOrigin);
 		}
-
+		var isNavBack = false;
 		IShellObservableFragment? trackFragment = null;
 
 		switch (navSource)
@@ -171,10 +171,13 @@ public class ShellTransItemRenderer : ShellItemRenderer
 			case ShellNavigationSource.PopToRoot:
 			case ShellNavigationSource.Remove:
 			{
+				isNavBack = true;
 				trackFragment = currentFragment;
 
 				if (currentFragment is not null)
 				{
+					// Do not use Remove here,
+					// or the Fragment will be destroyed before the animation completes
 					t.HideEx(currentFragment.Fragment);
 				}
 
@@ -192,7 +195,7 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 		if (animated && trackFragment is not null)
 		{
-			//GetNavigationTarget().SetBackgroundColor(Colors.Black.ToPlatform());
+			GetNavigationTarget().SetBackgroundColor(Colors.Black.ToPlatform());
 			trackFragment.AnimationFinished += CallBack;
 		}
 		else
@@ -213,13 +216,17 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		void CallBack(object? s, EventArgs e)
 		{
 			trackFragment.AnimationFinished -= CallBack;
+			
+			if (isNavBack)
+				t.RemoveEx(trackFragment.Fragment);
+
 			result.TrySetResult(true);
 			GetNavigationTarget().SetBackground(null);
 		}
 	}
 
 
-	void SetupAnimationImpl(ShellNavigationSource navSource, FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
+	void SetupAnimationImpl(FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
 	{
 		var duration = ShellTrans.GetDuration(page);
 		var transactionIn = ShellTrans.GetTransitionIn(page);
@@ -227,12 +234,6 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 		var animationIn = transactionIn.ToPlatform(duration);
 		var animationOut = transactionOut.ToPlatform(duration);
-
-
-		//if (navSource is ShellNavigationSource.Pop or ShellNavigationSource.PopToRoot or ShellNavigationSource.Remove)
-		//{
-		//	(oldFragment, fragment) = (fragment, oldFragment);
-		//}
 
 		if (destination is not null)
 		{

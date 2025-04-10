@@ -8,8 +8,8 @@ public partial class NewPage1 : ContentPage
 	{
 		InitializeComponent();
 
-		ShellTrans.SetTransitionIn(this, TransitionType.TopIn);
-		ShellTrans.SetTransitionOut(this, TransitionType.BottomOut);
+		ShellTrans.SetTransitionIn(this, TransitionType.BottomIn);
+		ShellTrans.SetTransitionOut(this, TransitionType.TopOut);
 		ShellTrans.SetDuration(this, 2000);
 
 
