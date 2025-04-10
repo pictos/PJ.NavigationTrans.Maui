@@ -49,8 +49,12 @@ public partial class ShellTransRenderer : ShellRenderer
 		{
 			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
 			fragmentTransaction.RunOnCommit(runnableOut);
+			runnableOut.Finished = (f) =>
+			{
+				fragmentTransaction.RemoveEx(f);
+			};
 		}
-		
+
 		fragmentTransaction.RunOnCommit(runnableIn);
 
 		fragmentTransaction.CommitAllowingStateLoss();

@@ -1,6 +1,5 @@
 ﻿using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Platform.Compatibility;
-using Microsoft.Maui.Platform;
 
 namespace PJ.NavigationTransitions.Maui;
 
@@ -120,14 +119,17 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 		var t = ChildFragmentManager.BeginTransactionEx();
 
+		var destinationFragment = currentFragment?.Fragment;
+		var fragmentOrigin = target.Fragment;
+
+		
 		if (animated)
 		{
-			SetupAnimation(navSource, t, page);
+			SetupAnimationImpl(navSource, t, page, destinationFragment, fragmentOrigin);
 		}
 
 		IShellObservableFragment? trackFragment = null;
 
-		t.CommitAllowingStateLossEx();
 		switch (navSource)
 		{
 			case ShellNavigationSource.Push:
@@ -173,7 +175,7 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 				if (currentFragment is not null)
 				{
-					t.RemoveEx(currentFragment.Fragment);
+					t.HideEx(currentFragment.Fragment);
 				}
 
 				if (!ChildFragmentManager.Contains(target.Fragment))
@@ -186,10 +188,11 @@ public class ShellTransItemRenderer : ShellItemRenderer
 				break;
 			}
 		}
+		t.CommitAllowingStateLossEx();
 
 		if (animated && trackFragment is not null)
 		{
-			GetNavigationTarget().SetBackgroundColor(Colors.Black.ToPlatform());
+			//GetNavigationTarget().SetBackgroundColor(Colors.Black.ToPlatform());
 			trackFragment.AnimationFinished += CallBack;
 		}
 		else
@@ -211,7 +214,36 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		{
 			trackFragment.AnimationFinished -= CallBack;
 			result.TrySetResult(true);
-			//GetNavigationTarget().SetBackground(null);
+			GetNavigationTarget().SetBackground(null);
+		}
+	}
+
+
+	void SetupAnimationImpl(ShellNavigationSource navSource, FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
+	{
+		var duration = ShellTrans.GetDuration(page);
+		var transactionIn = ShellTrans.GetTransitionIn(page);
+		var transactionOut = ShellTrans.GetTransitionOut(page);
+
+		var animationIn = transactionIn.ToPlatform(duration);
+		var animationOut = transactionOut.ToPlatform(duration);
+
+
+		//if (navSource is ShellNavigationSource.Pop or ShellNavigationSource.PopToRoot or ShellNavigationSource.Remove)
+		//{
+		//	(oldFragment, fragment) = (fragment, oldFragment);
+		//}
+
+		if (destination is not null)
+		{
+			var runnableOut = new AnimationRunnable(destination, animationOut.Animation);
+			t.RunOnCommit(runnableOut);
+		}
+
+		if (originFragment is not null)
+		{
+			var runnableIn = new AnimationRunnable(originFragment, animationIn.Animation);
+			t.RunOnCommit(runnableIn); 
 		}
 	}
 
@@ -229,7 +261,7 @@ public class ShellTransItemRenderer : ShellItemRenderer
 			observableFragment = fragmentMap[page] = CreateFragmentForPage(page);
 		}
 
-		var fragment = observableFragment!.Fragment;
+		var fragment = observableFragment.Fragment;
 		var oldFragment = currentFragment?.Fragment;
 
 		if (oldFragment is not null)

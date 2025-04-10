@@ -6,6 +6,7 @@ sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 {
 	readonly WeakWrapper<Fragment> fragmentWrapper;
 	readonly WeakWrapper<AAnimation> animationWrapper;
+	public Action<Fragment>? Finished { get; set; }
 
 	public AnimationRunnable(Fragment fragment, AAnimation animation)
 	{
@@ -20,7 +21,14 @@ sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 		if (animation is null)
 			return;
 
-		fragmentWrapper.Target?.View?.StartAnimation(animation);
+		var fragment = fragmentWrapper.Target;
+
+		if (fragment is null)
+			return;
+
+		fragment.View?.StartAnimation(animation);
+
+		Finished?.Invoke(fragment);
 	}
 }
 
