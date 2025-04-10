@@ -200,6 +200,8 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		}
 		else
 		{
+			if (trackFragment is not null && isNavBack)
+				t.RemoveEx(trackFragment.Fragment);
 			result.TrySetResult(true);
 		}
 
