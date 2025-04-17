@@ -18,7 +18,7 @@ class ShellItemTrans : IShellItemTransition
 		var oldView = oldRenderer.ViewController.View!;
 		var newView = newRenderer.ViewController.View!;
 		var animIn = ShellTrans.GetTransitionIn(content);
-
+		var animOut = ShellTrans.GetTransitionOut(content);
 		if (animIn == TransitionType.Default)
 		{
 			return DefaultImpl(oldRenderer, newRenderer);
@@ -28,22 +28,41 @@ class ShellItemTrans : IShellItemTransition
 
 		oldView.Superview!.InsertSubviewAbove(newView, oldView);
 
-		var duration = ShellTrans.GetDuration(content);
+		var duration = ShellTrans.GetDuration(content) / 1_000;
 
-		//var animation = Animations.BuiltInAnimation(animIn, tcs, duration / 1_000);
-
-		//var view = newRenderer.ViewController.View!;
-
-		//view.Layer.AddAnimation(animation, null);
-
-		Animations.ScaleAnimation(newView, tcs, duration / 1_000);
-		//Animations.ScaleAnimation(oldView, tcs, duration / 1_000);
-
-		//Animations.FadeAnimation(oldView, callback);
-		//Animations.FadeAnimation(newView, callback, 2);
-
+		SelectAndRunAnimation(animOut, duration, tcs, oldView);
+		SelectAndRunAnimation(animIn, duration, tcs, newView);
 		return tcs.Task;
 	}
+
+
+	static void SelectAndRunAnimation(TransitionType animation, int duration, TaskCompletionSource? tcs, UIView view)
+	{
+		ArgumentNullException.ThrowIfNull(view);
+
+		switch (animation)
+		{
+			case TransitionType.FadeIn:
+			case TransitionType.FadeOut:
+				view.FadeAnimation(tcs, duration);
+				break;
+			case TransitionType.ScaleIn:
+			case TransitionType.ScaleOut:
+				view.ScaleAnimation(tcs, duration);
+				break;
+			case TransitionType.LeftIn:
+			case TransitionType.LeftOut:
+			case TransitionType.RightIn:
+			case TransitionType.RightOut:
+			case TransitionType.TopIn:
+			case TransitionType.TopOut:
+			case TransitionType.BottomIn:
+			case TransitionType.BottomOut:
+				view.BuiltInAnimation(animation, tcs, duration);
+				break;
+		}
+	}
+
 
 	static Task DefaultImpl(IShellItemRenderer oldRenderer, IShellItemRenderer newRenderer)
 	{
@@ -70,7 +89,7 @@ class ShellItemTrans : IShellItemTransition
 
 static class Animations
 {
-	public static CATransition BuiltInAnimation(TransitionType transition, TaskCompletionSource tcs, float duration)
+	public static void BuiltInAnimation(this UIView view, TransitionType transition, TaskCompletionSource? tcs, float duration)
 	{
 		var trans = CATransition.CreateAnimation();
 		trans.Duration = duration;
@@ -78,19 +97,19 @@ static class Animations
 
 		switch (transition)
 		{
-			case TransitionType.LeftIn:
+			case TransitionType.RightIn:
 			case TransitionType.LeftOut:
 				trans.Subtype = CAAnimation.TransitionFromRight;
 				break;
-			case TransitionType.RightIn:
+			case TransitionType.LeftIn:
 			case TransitionType.RightOut:
 				trans.Subtype = CAAnimation.TransitionFromLeft;
 				break;
-			case TransitionType.TopIn:
+			case TransitionType.BottomIn:
 			case TransitionType.TopOut:
 				trans.Subtype = CAAnimation.TransitionFromBottom;
 				break;
-			case TransitionType.BottomIn:
+			case TransitionType.TopIn:
 			case TransitionType.BottomOut:
 				trans.Subtype = CAAnimation.TransitionFromTop;
 				break;
@@ -98,13 +117,13 @@ static class Animations
 
 		trans.AnimationStopped += (_, __) =>
 		{
-			tcs.TrySetResult();
+			tcs?.TrySetResult();
 		};
 
-		return trans;
+		view.Layer.AddAnimation(trans, null);
 	}
 
-	public static void FadeAnimation(UIView view, Action callback, double duration = 1.0)
+	public static void FadeAnimation(this UIView view, TaskCompletionSource? tcs, double duration = 1.0)
 	{
 		view.Alpha = 0.0f;
 		view.Transform = CGAffineTransform.MakeIdentity();
@@ -114,11 +133,11 @@ static class Animations
 			{
 				view.Alpha = 1.0f;
 			},
-			callback
+			() => tcs?.TrySetResult()
 		);
 	}
 
-	public static void FlipAnimation(UIView view, TaskCompletionSource? tcs, double duration = 0.5)
+	public static void FlipAnimation(this UIView view, TaskCompletionSource? tcs, double duration = 0.5)
 	{
 		var m34 = (nfloat)(-1 * 0.001);
 		var initialTransform = CATransform3D.Identity;
@@ -140,7 +159,7 @@ static class Animations
 		);
 	}
 
-	public static void ScaleAnimation(UIView view, TaskCompletionSource? tcs, double duration = 0.5)
+	public static void ScaleAnimation(this UIView view, TaskCompletionSource? tcs, double duration = 0.5)
 	{
 		view.Alpha = 0.0f;
 		view.Transform = CGAffineTransform.MakeScale((nfloat)0.5, (nfloat)0.5);
