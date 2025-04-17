@@ -34,13 +34,6 @@ static class AnimationHelpers
 		loadedAnimation.Duration = duration;
 		return new(animation, loadedAnimation);
 	}
-
-	public static void SetFieldValue<TOwner, TType>(in TOwner owner, ref TType? target, in string fieldName)
-	{
-		var fieldInfo = typeof(TOwner).GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		Debug.Assert(fieldInfo is not null);
-		target = (TType?)fieldInfo.GetValue(owner);
-	}
 }
 
 static class AndroidHelpers

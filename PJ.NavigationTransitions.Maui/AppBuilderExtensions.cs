@@ -4,7 +4,7 @@ public static class AppBuilderExtensions
 {
 	public static MauiAppBuilder UseCustomTransitions(this MauiAppBuilder builder)
 	{
-#if ANDROID
+#if ANDROID || IOS
 		builder.ConfigureMauiHandlers(h =>
 		{
 			h.AddHandler(typeof(Shell), typeof(ShellTransRenderer));

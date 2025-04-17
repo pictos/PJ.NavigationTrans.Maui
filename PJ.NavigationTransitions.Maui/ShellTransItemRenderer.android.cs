@@ -11,13 +11,10 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 	public ShellTransItemRenderer(IShellContext context) : base(context)
 	{
-		//AnimationHelpers.SetFieldValue<ShellItemRendererBase, Dictionary<Element, IShellObservableFragment>>(this, ref __fragmentMap, "_fragmentMap");
 	}
 
-	// Use this method to setup animation
 	protected override Task<bool> HandleFragmentUpdate(ShellNavigationSource navSource, ShellSection shellSection, Page page, bool animated)
 	{
-		//base.HandleFragmentUpdate
 		var result = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
 		var isForCurrentTab = shellSection == ShellSection;

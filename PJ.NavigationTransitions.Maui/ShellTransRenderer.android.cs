@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AndroidX.Fragment.App;
+﻿using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
@@ -26,7 +25,10 @@ public partial class ShellTransRenderer : ShellRenderer
 		if (!animate || transitionIn == TransitionType.Default)
 		{
 			base.SwitchFragment(manager, targetView, newItem, false);
-			AnimationHelpers.SetFieldValue<ShellRenderer, IShellItemRenderer>(this, ref __currentView, "_currentView");
+
+			ref var refView = ref UnsafeAccessorClass.GetSetUnsafeCurrentView(this);
+			__currentView = refView;
+
 			return;
 		}
 		var transitionOut = ShellTrans.GetTransitionOut(shellContent);
@@ -44,7 +46,7 @@ public partial class ShellTransRenderer : ShellRenderer
 		var oldFragment = previousView?.Fragment;
 		fragmentTransaction.Add(targetView.Id, fragment);
 		var runnableIn = new AnimationRunnable(fragment, animationIn.Animation);
-		
+
 		if (oldFragment is not null)
 		{
 			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
@@ -58,5 +60,7 @@ public partial class ShellTransRenderer : ShellRenderer
 		fragmentTransaction.RunOnCommit(runnableIn);
 
 		fragmentTransaction.CommitAllowingStateLoss();
+
+		UnsafeAccessorClass.GetSetUnsafeCurrentView(this) = __currentView;
 	}
 }
