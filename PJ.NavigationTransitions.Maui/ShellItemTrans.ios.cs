@@ -42,14 +42,12 @@ class ShellItemTrans : IShellItemTransition
 
 		switch (animation)
 		{
-			case TransitionType.FadeIn:
-			case TransitionType.FadeOut:
-				view.FadeAnimation(tcs, duration);
-				break;
-			case TransitionType.ScaleIn:
 			case TransitionType.ScaleOut:
+			case TransitionType.ScaleIn:
 				view.ScaleAnimation(tcs, duration);
 				break;
+			case TransitionType.FadeIn:
+			case TransitionType.FadeOut:
 			case TransitionType.LeftIn:
 			case TransitionType.LeftOut:
 			case TransitionType.RightIn:
@@ -112,6 +110,12 @@ static class Animations
 			case TransitionType.TopIn:
 			case TransitionType.BottomOut:
 				trans.Subtype = CAAnimation.TransitionFromTop;
+				break;
+			case TransitionType.FadeIn:
+				trans.Subtype = CAAnimation.TransitionReveal;
+				break;
+			case TransitionType.FadeOut:
+				trans.Subtype = CAAnimation.TransitionFade;
 				break;
 		}
 
