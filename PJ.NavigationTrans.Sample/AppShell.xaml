@@ -16,8 +16,8 @@
 	<ShellContent
 		Title="Home"
 		trans:ShellTrans.Duration="1000"
-		trans:ShellTrans.TransitionIn="LeftIn"
-		trans:ShellTrans.TransitionOut="RightOut"
+		trans:ShellTrans.TransitionIn="ScaleIn"
+		trans:ShellTrans.TransitionOut="FadeOut"
 		ContentTemplate="{DataTemplate local:NewPage1}"
 		Route="NewPage1" />
 

@@ -19,3 +19,5 @@ public enum TransitionType
 #if ANDROID
 readonly record struct AnimationInfo(int AnimationId, AAnimation Animation);
 #endif
+
+record struct TransInfo(int Duration, TransitionType AnimationIn, TransitionType AnimationOut);
