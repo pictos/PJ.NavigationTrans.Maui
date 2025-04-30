@@ -1,4 +1,5 @@
-﻿using UIKit;
+﻿using ObjCRuntime;
+using UIKit;
 
 namespace PJ.NavigationTransitions.Maui;
 
@@ -11,3 +12,19 @@ sealed class AnimationNavigationControllerDelegate : UINavigationControllerDeleg
 		return _animator;
 	}
 }
+
+//sealed class AnimationNavigationControllerDelegate : UIViewControllerTransitioningDelegate
+//{
+//	static TransitionAnimator _animator = new TransitionAnimator();
+
+//	public override IUIViewControllerAnimatedTransitioning GetAnimationControllerForPresentedController(UIViewController presented, UIViewController presenting, UIViewController source)
+//	{
+//		return _animator;
+//	}
+
+//	public override IUIViewControllerAnimatedTransitioning GetAnimationControllerForDismissedController(UIViewController dismissed)
+//	{
+//		return _animator;
+//	}
+
+//}

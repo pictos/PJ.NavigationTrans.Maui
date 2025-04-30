@@ -9,5 +9,8 @@ class UnsafeAccessorClass
 #if ANDROID
 	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_currentView")]
 	public static extern ref IShellItemRenderer? GetSetUnsafeCurrentView(ShellRenderer shell);
+#elif IOS
+	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "RemoveViewController")]
+	public static extern void UnsafeRemoveViewController(ShellSectionRenderer shellSectionRenderer, UIKit.UIViewController viewController);
 #endif
 }

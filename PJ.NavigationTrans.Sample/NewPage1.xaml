@@ -5,8 +5,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:trans="clr-namespace:PJ.NavigationTransitions.Maui;assembly=PJ.NavigationTransitions.Maui"
 	Title="NewPage1"
-    BackgroundColor="Fuchsia">
-    
+	BackgroundColor="Fuchsia">
+
 	<VerticalStackLayout>
 		<Label
 			HorizontalOptions="Center"
