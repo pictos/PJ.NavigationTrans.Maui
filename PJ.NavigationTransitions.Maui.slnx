@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+  </Folder>
+  <Project Path="PJ.NavigationTrans.Sample/PJ.NavigationTrans.Sample.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="PJ.NavigationTransitions.Maui/PJ.NavigationTransitions.Maui.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
