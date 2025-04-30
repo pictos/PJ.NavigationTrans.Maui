@@ -4,7 +4,7 @@ using CoreGraphics;
 using UIKit;
 
 namespace PJ.NavigationTransitions.Maui;
-static class AnimationHelpers
+static partial class AnimationHelpers
 {
 	[OverloadResolutionPriority(0)]
 	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, int duration, TaskCompletionSource? tcs = null)

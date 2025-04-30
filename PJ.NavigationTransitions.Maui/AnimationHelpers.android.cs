@@ -5,7 +5,7 @@ using AView = Android.Views.View;
 
 namespace PJ.NavigationTransitions.Maui;
 
-static class AnimationHelpers
+static partial class AnimationHelpers
 {
 	public static int ToPlatform(this TransitionType transition) => transition switch
 	{

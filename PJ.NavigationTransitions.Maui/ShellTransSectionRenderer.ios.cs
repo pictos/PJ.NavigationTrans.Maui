@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls.Platform.Compatibility;
+using Microsoft.Maui.Platform;
 using UIKit;
 
 namespace PJ.NavigationTransitions.Maui;
@@ -16,6 +17,7 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 	public override void ViewDidLoad()
 	{
 		base.ViewDidLoad();
+		Delegate = new AnimationNavigationControllerDelegate();
 		// Implement some property to control this
 		//InteractivePopGestureRecognizer.Enabled = 
 	}
@@ -28,23 +30,21 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 		currentPage = page;
 	}
 
-	public override UIViewController[] PopToRootViewController(bool animated)
-	{
-		var p = context.Shell.CurrentPage;
-		Pop(animated);
-		var r = base.PopToRootViewController(animated);
+	//public override UIViewController[] PopToRootViewController(bool animated)
+	//{
+	//	var p = context.Shell.CurrentPage;
+	//	Pop(animated);
+	//	var r = base.PopToRootViewController(animated);
 
-		p = context.Shell.CurrentPage;
-		return r;
+	//	p = context.Shell.CurrentPage;
+	//	return r;
+	//}
 
-	}
-
-	public override UIViewController PopViewController(bool animated)
-	{
-		Pop(animated);
-		return base.PopViewController(!animated);
-	}
-
+	//public override UIViewController PopViewController(bool animated)
+	//{
+	//	Pop(animated);
+	//	return base.PopViewController(!animated);
+	//}
 
 	void Pop(bool animated)
 	{
@@ -56,16 +56,17 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 		var oldView = View.SnapshotView(false);
 		var newView = View;
 
-		Assert(oldView is not null);
+		//Assert(oldView is not null);
 		Assert(page is not null);
 
 		newView.Layer.RemoveAllAnimations();
 
-		newView.Superview?.AddSubview(oldView);
+		if (oldView is not null)
+			newView.Superview?.AddSubview(oldView);
 
-		var info = GetInfo(page);
+		var info = AnimationHelpers.GetInfo(page);
 
-		oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, () =>
+		oldView?.SelectAndRunAnimation(info.AnimationOut, info.Duration + 1, () =>
 		{
 			oldView.Layer.RemoveAllAnimations();
 			oldView.RemoveFromSuperview();
@@ -73,61 +74,47 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 		});
 		newView.SelectAndRunAnimation(info.AnimationIn, info.Duration);
 	}
+}
 
-	static TransInfo GetInfo(BindableObject bindable)
+sealed class AnimationNavigationControllerDelegate : UINavigationControllerDelegate
+{
+	TransitionAnimator _animator = new TransitionAnimator();
+
+	public override IUIViewControllerAnimatedTransitioning GetAnimationControllerForOperation(UINavigationController navigationController, UINavigationControllerOperation operation, UIViewController fromViewController, UIViewController toViewController)
 	{
-		var duration = ShellTrans.GetDuration(bindable);
+		return _animator;
+	}
+}
 
-#if IOS
-		duration /= 1_000;
-#endif
+sealed class TransitionAnimator : UIViewControllerAnimatedTransitioning
+{
+	const double _duration = 3.5;
 
-		var animationIn = ShellTrans.GetTransitionIn(bindable);
-		var animationOut = ShellTrans.GetTransitionOut(bindable);
+	public override void AnimateTransition(IUIViewControllerContextTransitioning transitionContext)
+	{
+		var containerView = transitionContext.ContainerView;
+		var toView = transitionContext.GetViewFor(UITransitionContext.ToViewKey);
+		var fromView = transitionContext.GetViewFor(UITransitionContext.FromViewKey);
+		containerView.ClearSubviews();
 
-		return new(duration, animationIn, animationOut);
+		containerView.AddSubview(fromView);
+		containerView.AddSubview(toView);
+
+		fromView.BuiltInAnimation(TransitionType.TopOut, null, null, (float)_duration);
+		toView.BuiltInAnimation(TransitionType.BottomIn, null, () => transitionContext.CompleteTransition(true), (float)_duration);
+
+		//toView.Alpha = 0;
+		//UIView.Animate(_duration, () =>
+		//{
+		//	toView.Alpha = 1;
+		//}, () =>
+		//{
+		//	transitionContext.CompleteTransition(true);
+		//});
 	}
 
-	public override async void PushViewController(UIViewController viewController, bool animated)
+	public override double TransitionDuration(IUIViewControllerContextTransitioning transitionContext)
 	{
-		if (!animated || View is null)
-		{
-			goto END;
-		}
-
-		var page = currentPage;
-		var oldView = View.SnapshotView(false);
-		var newView = viewController.View;
-
-		Assert(oldView is not null);
-		Assert(newView is not null);
-		Assert(page is not null);
-
-		View.Layer.RemoveAllAnimations();
-		oldView.Layer.RemoveAllAnimations();
-		newView.Layer.RemoveAllAnimations();
-
-		View.AddSubview(newView);
-		View.AddSubview(oldView);
-
-		View.SendSubviewToBack(oldView);
-
-		var info = GetInfo(page);
-
-		var tcs = new TaskCompletionSource();
-
-		newView.SelectAndRunAnimation(info.AnimationIn, info.Duration, tcs);
-		oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, () =>
-		{
-			oldView.Layer.RemoveAllAnimations();
-			oldView.RemoveFromSuperview();
-			oldView = null;
-		});
-
-		await tcs.Task;
-
-		END:
-		base.PushViewController(viewController, false);
-
+		return _duration;
 	}
 }
