@@ -102,7 +102,7 @@ static partial class AnimationHelpers
 		);
 	}
 
-	public static void FlipAnimation(this UIView view, TaskCompletionSource? tcs, double duration = 0.5)
+	public static void FlipAnimation(this UIView view, TaskCompletionSource? tcs, Action? complete, double duration = 0.5)
 	{
 		var m34 = (nfloat)(-1 * 0.001);
 		var initialTransform = CATransform3D.Identity;
@@ -120,7 +120,11 @@ static partial class AnimationHelpers
 				view.Layer.Transform = newTransform;
 				view.Alpha = 1.0f;
 			},
-			() => tcs?.TrySetResult()
+			() =>
+			{
+				tcs?.TrySetResult();
+				complete?.Invoke();
+			}
 		);
 	}
 

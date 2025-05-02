@@ -5,10 +5,17 @@ namespace PJ.NavigationTransitions.Maui;
 
 sealed class AnimationNavigationControllerDelegate : UINavigationControllerDelegate
 {
-	static TransitionAnimator _animator = new TransitionAnimator();
+	internal static TransitionAnimator _animator = new TransitionAnimator();
+	INavigationAwareness navInfo;
+
+	public AnimationNavigationControllerDelegate(INavigationAwareness navInfo)
+	{
+		this.navInfo = navInfo;
+	}
 
 	public override IUIViewControllerAnimatedTransitioning GetAnimationControllerForOperation(UINavigationController navigationController, UINavigationControllerOperation operation, UIViewController fromViewController, UIViewController toViewController)
 	{
+		_animator.NavInfo = navInfo;
 		return _animator;
 	}
 }

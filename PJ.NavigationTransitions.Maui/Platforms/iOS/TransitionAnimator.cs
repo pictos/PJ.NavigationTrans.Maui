@@ -7,8 +7,15 @@ sealed class TransitionAnimator : UIViewControllerAnimatedTransitioning
 {
 	const double _duration = 1.5;
 
+	public INavigationAwareness? NavInfo { get; internal set; }
+
 	public override void AnimateTransition(IUIViewControllerContextTransitioning transitionContext)
 	{
+		if (NavInfo is null)
+		{
+			return;
+		}
+
 		var containerView = transitionContext.ContainerView;
 
 		var toVc = transitionContext.GetViewControllerForKey(UITransitionContext.ToViewControllerKey);
@@ -26,21 +33,26 @@ sealed class TransitionAnimator : UIViewControllerAnimatedTransitioning
 		containerView.Layer.RemoveAllAnimations();
 		toView.Layer.RemoveAllAnimations();
 
+		containerView.AddSubview(fromView);
+		containerView.AddSubview(toView);
+
 		if (ShellTransSectionRenderer.isPush)
 		{
 			containerView.AddSubview(fromView);
 			containerView.AddSubview(toView);
 
+			fromView.FlipAnimation(null, fromView.RemoveFromSuperview, _duration);
+			toView.FlipAnimation(null, () => transitionContext.CompleteTransition(true), _duration);
 
-			fromView.BuiltInAnimation(TransitionType.TopOut, null, () => fromView.RemoveFromSuperview(), _duration);
-			toView.BuiltInAnimation(TransitionType.BottomIn, null, () => transitionContext.CompleteTransition(true), _duration);
+			//fromView.BuiltInAnimation(TransitionType.TopOut, null, () => fromView.RemoveFromSuperview(), _duration);
+			//toView.BuiltInAnimation(TransitionType.BottomIn, null, () => transitionContext.CompleteTransition(true), _duration);
 		}
 		else
 		{
 			containerView.AddSubview(toView);
-			containerView.InsertSubview(fromView, 0);
+			//containerView.InsertSubview(fromView, 0);
 
-			fromView.BuiltInAnimation(TransitionType.BottomOut, null, () => transitionContext.CompleteTransition(true), _duration);
+			//fromView.BuiltInAnimation(TransitionType.BottomOut, null, () => transitionContext.CompleteTransition(true), _duration);
 			toView.BuiltInAnimation(TransitionType.TopIn, null, () => { fromView.RemoveFromSuperview(); transitionContext.CompleteTransition(true); }, _duration);
 		}
 	}

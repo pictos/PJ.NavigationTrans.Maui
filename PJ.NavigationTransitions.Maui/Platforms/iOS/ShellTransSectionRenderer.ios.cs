@@ -1,13 +1,22 @@
 ﻿using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Controls.Platform.Compatibility;
-using Microsoft.Maui.Platform;
+using UIKit;
 
 namespace PJ.NavigationTransitions.Maui;
-class ShellTransSectionRenderer : ShellSectionRenderer
+
+interface INavigationAwareness
+{
+	Page? CurrentPage { get; }
+	IMauiContext MauiContext { get; }
+}
+
+class ShellTransSectionRenderer : ShellSectionRenderer, INavigationAwareness
 {
 	internal static bool isPush;
 	IShellContext context;
-	Page? currentPage;
+	public Page? CurrentPage { get; private set; }
+
+	public IMauiContext MauiContext { get; private set; } = default!;
 
 	public ShellTransSectionRenderer(IShellContext context) : base(context)
 	{
@@ -19,8 +28,8 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 	{
 		base.ViewDidLoad();
 		base.Delegate = null!;
-		
-		base.Delegate = new AnimationNavigationControllerDelegate();
+		MauiContext = context.Shell.Handler!.MauiContext ?? throw new NullReferenceException("panic at the disco!");
+		base.Delegate = new AnimationNavigationControllerDelegate(this);
 		//base.TransitioningDelegate = new AnimationNavigationControllerDelegate();
 		// Implement some property to control this
 		//InteractivePopGestureRecognizer.Enabled = 
@@ -31,8 +40,9 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 		base.OnDisplayedPageChanged(page);
 
 		// This will get the page that I need to observe and get values
-		currentPage = page;
+		CurrentPage = page;
 	}
+
 	protected override async void Dispose(bool disposing)
 	{
 
