@@ -15,9 +15,38 @@
 
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<Authors>Pedro Jesus</Authors>
+		<Company>PJSouzaSoftware</Company>
+		<Description>This project allows you to use custom animatinos during navigation in .NET MAUI</Description>
+
+		<PackageTags>.NET MAUI, Navigation, Animation</PackageTags>
+
+		<PackageId>PJSouzaSoftware.NavigationTrans.Maui</PackageId>
+
+		<RepositoryUrl>https://github.com/pictos/PJ.NavigationTrans.Maui/</RepositoryUrl>
+		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+		<Product>NavigationTrans.Maui</Product>
+		<Copyright>Copyright(c) 2025 Pedro Jesus</Copyright>
+
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+	<ItemGroup>
+		<SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+			<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+				<PrivateAssets>all</PrivateAssets>
+				<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+			</PackageReference>
+	</ItemGroup>
+
 	<ItemGroup Condition="$(IsAndroid)">
 		<AndroidResource Include="Platforms\Android\Resources\anim\**\*.xml" />
 	</ItemGroup>
-
-
 </Project>
