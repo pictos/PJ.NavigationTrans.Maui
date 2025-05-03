@@ -4,7 +4,6 @@
 name: Build project on macOS
 
 on:
-  push:
   pull_request:
     branches: [ "main" ]
 
