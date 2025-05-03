@@ -1,13 +1,16 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path=".github/workflows/dotnet-macos.yml" />
+    <File Path=".github/workflows/dotnet-windows.yml" />
+    <File Path=".github/workflows/release-nuget.yml" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
   </Folder>
-  <Project Path="PJ.NavigationTrans.Sample/PJ.NavigationTrans.Sample.csproj">
+  <Project Path="PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj">
+  <Project Path="PJ.NavigationTrans.Sample/PJ.NavigationTrans.Sample.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
 </Solution>
