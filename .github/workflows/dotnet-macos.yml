@@ -22,21 +22,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+   
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+   
     - name: Setup Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
         xcode-version: '16.3'
+    
     - name: Workload install
       run: dotnet workload install maui
+
     - name: Restore library dependencies
       run: dotnet restore ${{env.LIB_CSPROJ}}
+    
     - name: Restore sample dependencies
       run: dotnet restore
+    
     - name: Build library
       run: dotnet build ${{env.LIB_CSPROJ}} -c Release -f net9.0-ios --no-restore
+    
     - name: Build Sample app
       run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release -f net9.0-ios  --no-restore
