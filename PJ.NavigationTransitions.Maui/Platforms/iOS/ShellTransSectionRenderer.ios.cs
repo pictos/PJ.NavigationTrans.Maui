@@ -1,66 +1,73 @@
 ﻿using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Controls.Platform.Compatibility;
-using UIKit;
 
 namespace PJ.NavigationTransitions.Maui;
 
-interface INavigationAwareness
+class ShellTransSectionRenderer : ShellSectionRenderer
 {
-	Page? CurrentPage { get; }
-	IMauiContext MauiContext { get; }
-}
-
-class ShellTransSectionRenderer : ShellSectionRenderer, INavigationAwareness
-{
-	internal static bool isPush;
-	IShellContext context;
-	public Page? CurrentPage { get; private set; }
-
-	public IMauiContext MauiContext { get; private set; } = default!;
+	Page? currentPage;
 
 	public ShellTransSectionRenderer(IShellContext context) : base(context)
 	{
-		this.context = context;
-	}
-
-
-	public override void ViewDidLoad()
-	{
-		base.ViewDidLoad();
-		base.Delegate = null!;
-		MauiContext = context.Shell.Handler!.MauiContext ?? throw new NullReferenceException("panic at the disco!");
-		base.Delegate = new AnimationNavigationControllerDelegate(this);
-		//base.TransitioningDelegate = new AnimationNavigationControllerDelegate();
-		// Implement some property to control this
-		//InteractivePopGestureRecognizer.Enabled = 
 	}
 
 	protected override void OnDisplayedPageChanged(Page page)
 	{
 		base.OnDisplayedPageChanged(page);
 
-		// This will get the page that I need to observe and get values
-		CurrentPage = page;
+		// This will get the page that I need to observe and get values.
+		// Shell.Current.CurrentPage doesn't give the correct page to access.
+		currentPage = page;
 	}
 
 	protected override async void Dispose(bool disposing)
 	{
-
+		// Shell disposes this too early, when navigating between flyouts
+		// so we add a delay to keep things around for more time.
+		// Otherwise this will throw an exception
 		await Task.Delay(TimeSpan.FromSeconds(2));
 		base.Dispose(disposing);
 	}
 
 	protected override void OnPopRequested(NavigationRequestedEventArgs e)
 	{
-		isPush = false;
+		if (currentPage is null || !e.Animated)
+		{
+			goto END;
+		}
+
+		var info = AnimationHelpers.GetInfo(currentPage);
+
+		var view = ViewController.View;
+
+		Assert(view is not null);
+
+		view.Layer.RemoveAllAnimations();
+
+		view.BuiltInAnimation(info.AnimationOut, null, null, info.Duration);
+		e.Animated = false;
+
+		END:
 		base.OnPopRequested(e);
 	}
 
 	protected override void OnPushRequested(NavigationRequestedEventArgs e)
 	{
-		isPush = true;
-		base.OnPushRequested(e);
+		if (currentPage is null || !e.Animated)
+		{
+			goto END;
+		}
 
-		//UnsafeAccessorClass.UnsafeRemoveViewController(this, ViewController);
+		var info = AnimationHelpers.GetInfo(currentPage);
+
+		var view = ViewController.View!;
+
+		view.Layer.RemoveAllAnimations();
+
+		view.FlipAnimation(null, null, 1.5);
+		e.Animated = info.AnimationIn != TransitionType.Default;
+
+		END:
+		base.OnPushRequested(e);
 	}
 }

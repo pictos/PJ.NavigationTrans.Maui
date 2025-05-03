@@ -25,13 +25,13 @@ static partial class AnimationHelpers
 		_ => Resource.Animation.none,
 	};
 
-	public static AnimationInfo ToPlatform(this TransitionType transition, int duration)
+	public static AnimationInfo ToPlatform(this TransitionType transition, double duration)
 	{
 		var animation = transition.ToPlatform();
 		var context = Platform.AppContext ?? throw new NullReferenceException();
 		var loadedAnimation = Android.Views.Animations.AnimationUtils.LoadAnimation(context, animation);
 		Debug.Assert(loadedAnimation is not null);
-		loadedAnimation.Duration = duration;
+		loadedAnimation.Duration = (long)duration;
 		return new(animation, loadedAnimation);
 	}
 }

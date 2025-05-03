@@ -2,11 +2,11 @@
 public static class ShellTrans
 {
 	public static readonly BindableProperty DurationProperty =
-		BindableProperty.CreateAttached("Duration", typeof(int), typeof(ShellContent), 500);
+		BindableProperty.CreateAttached("Duration", typeof(double), typeof(ShellContent), 500d);
 
-	public static int GetDuration(BindableObject view) => (int)view.GetValue(DurationProperty);
+	public static double GetDuration(BindableObject view) => (double)view.GetValue(DurationProperty);
 
-	public static void SetDuration(BindableObject view, int value) => view.SetValue(DurationProperty, value);
+	public static void SetDuration(BindableObject view, double value) => view.SetValue(DurationProperty, value);
 
 	public static readonly BindableProperty TransitionInProperty =
 		BindableProperty.CreateAttached("TransitionIn", typeof(TransitionType), typeof(ShellContent), TransitionType.Default);

@@ -20,4 +20,4 @@ public enum TransitionType
 readonly record struct AnimationInfo(int AnimationId, AAnimation Animation);
 #endif
 
-record struct TransInfo(int Duration, TransitionType AnimationIn, TransitionType AnimationOut);
+record struct TransInfo(double Duration, TransitionType AnimationIn, TransitionType AnimationOut);

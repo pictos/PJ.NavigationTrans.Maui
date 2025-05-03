@@ -7,19 +7,19 @@ namespace PJ.NavigationTransitions.Maui;
 static partial class AnimationHelpers
 {
 	[OverloadResolutionPriority(0)]
-	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, int duration, TaskCompletionSource? tcs = null)
+	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, double duration, TaskCompletionSource? tcs = null)
 	{
 		SelectAndRunAnimation(view, animation, duration, null, tcs);
 	}
 
 
 	[OverloadResolutionPriority(1)]
-	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, int duration, Action? complete = null)
+	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, double duration, Action? complete = null)
 	{
 		SelectAndRunAnimation(view, animation, duration, complete, null);
 	}
 
-	static void SelectAndRunAnimation(UIView view, TransitionType animation, int duration, Action? complete, TaskCompletionSource? tcs)
+	static void SelectAndRunAnimation(UIView view, TransitionType animation, double duration, Action? complete, TaskCompletionSource? tcs)
 	{
 		ArgumentNullException.ThrowIfNull(view);
 
