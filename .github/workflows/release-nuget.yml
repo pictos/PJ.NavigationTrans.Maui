@@ -23,4 +23,11 @@ jobs:
       id: get_version
       uses: battila7/get-version-action@v2
     - name: Pack
-      run: dotnet pack -c Release -p:PackageVersion=${{steps.get_version.outputs.version-without-v}}
+      run: dotnet pack -c Release -p:PackageVersion=${{steps.get_version.outputs.version-without-v}} -o .output --include-symbols --include-source
+    - name: Publish
+      env:
+        API_KEY: ${{secrets.NUGET_KEY}}
+      run: |
+        dotnet nuget push .output/*.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json
+        dotnet nuget push .output/*.snupkg --api-key $API_KEY --source https://symbols.nuget.org/
+
