@@ -15,6 +15,7 @@ env:
     LIB_CSPROJ: PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj
     SAMPLE_CSPROJ: PJ.NavigationTrans.Sample/PJ.NavigationTrans.Sample.csproj
     NugetPackageVersion: '99.0.0-preview${{ github.run_number }}'
+    CurrentSemanticVersionBase: '99.0.0'
 
 jobs:
   build:
@@ -45,7 +46,7 @@ jobs:
       run: dotnet restore
     
     - name: Build library
-      run: dotnet build ${{env.LIB_CSPROJ}} -c Release -p:PackageVersion=${{ env.NugetPackageVersion }} -p:Version=${{ NugetPackageVersion }} --no-restore
+      run: dotnet build ${{env.LIB_CSPROJ}} -c Release -p:PackageVersion=${{ env.NugetPackageVersion }} -p:Version=${{ env.NugetPackageVersion }} --no-restore
     
     - name: Build Sample app
       run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release --no-restore
