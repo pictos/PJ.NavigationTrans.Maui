@@ -37,6 +37,6 @@ jobs:
     - name: Restore sample dependencies
       run: dotnet restore
     - name: Build library
-      run: dotnet build ${{env.LIB_CSPROJ}} -c Release --no-restore
+      run: dotnet build ${{env.LIB_CSPROJ}} -c Release -f net9.0-ios --no-restore
     - name: Build Sample app
-      run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release --no-restore
+      run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release -f net9.0-ios  --no-restore
