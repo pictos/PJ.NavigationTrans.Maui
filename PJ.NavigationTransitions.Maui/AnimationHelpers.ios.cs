@@ -12,7 +12,6 @@ static partial class AnimationHelpers
 		SelectAndRunAnimation(view, animation, duration, null, tcs);
 	}
 
-
 	[OverloadResolutionPriority(1)]
 	public static void SelectAndRunAnimation(this UIView view, TransitionType animation, double duration, Action? complete = null)
 	{
@@ -41,6 +40,11 @@ static partial class AnimationHelpers
 			case TransitionType.BottomOut:
 				view.BuiltInAnimation(animation, tcs, complete, duration);
 				break;
+			
+			case TransitionType.FlipIn:
+			case TransitionType.FlipOut:
+				view.FlipAnimation(tcs, complete, duration);
+				break;
 		}
 	}
 
@@ -63,12 +67,12 @@ static partial class AnimationHelpers
 			case TransitionType.RightOut:
 				trans.Subtype = CAAnimation.TransitionFromLeft;
 				break;
+			case TransitionType.TopIn:
 			case TransitionType.BottomIn:
-			case TransitionType.TopOut:
 				trans.Subtype = CAAnimation.TransitionFromBottom;
 				break;
-			case TransitionType.TopIn:
 			case TransitionType.BottomOut:
+			case TransitionType.TopOut:
 				trans.Subtype = CAAnimation.TransitionFromTop;
 				break;
 			case TransitionType.FadeIn:
@@ -133,14 +137,20 @@ static partial class AnimationHelpers
 		view.Alpha = 0.0f;
 		view.Transform = CGAffineTransform.MakeScale((nfloat)0.5, (nfloat)0.5);
 
+		_ = MainThread.IsMainThread;
+
 		UIView.Animate(duration, 0, UIViewAnimationOptions.CurveEaseInOut,
 			() =>
 			{
+
+				_ = MainThread.IsMainThread;
 				view.Alpha = 1.0f;
 				view.Transform = CGAffineTransform.MakeScale((nfloat)1.0, (nfloat)1.0);
 			},
 			() =>
 			{
+
+				_ = MainThread.IsMainThread;
 				tcs?.TrySetResult();
 				complete?.Invoke();
 			}

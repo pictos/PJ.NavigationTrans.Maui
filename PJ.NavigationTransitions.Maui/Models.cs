@@ -13,7 +13,9 @@ public enum TransitionType
 	TopIn,
 	TopOut,
 	BottomIn,
-	BottomOut
+	BottomOut,
+	FlipIn,
+	FlipOut
 }
 
 #if ANDROID

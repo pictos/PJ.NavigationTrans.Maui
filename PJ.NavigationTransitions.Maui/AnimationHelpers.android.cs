@@ -22,6 +22,8 @@ static partial class AnimationHelpers
 		TransitionType.ScaleIn => Resource.Animation.scale_in,
 		TransitionType.ScaleOut => Resource.Animation.scale_out,
 		TransitionType.Default => Resource.Animation.none,
+		TransitionType.FlipIn => Resource.Animation.flip_in,
+		TransitionType.FlipOut => Resource.Animation.flip_out,
 		_ => Resource.Animation.none,
 	};
 

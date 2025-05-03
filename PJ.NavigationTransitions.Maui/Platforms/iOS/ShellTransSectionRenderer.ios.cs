@@ -3,7 +3,7 @@ using Microsoft.Maui.Controls.Platform.Compatibility;
 
 namespace PJ.NavigationTransitions.Maui;
 
-class ShellTransSectionRenderer : ShellSectionRenderer
+sealed class ShellTransSectionRenderer : ShellSectionRenderer
 {
 	Page? currentPage;
 
@@ -36,7 +36,18 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 			goto END;
 		}
 
+		CreateAndApplyAnimation(e);
+
+		END:
+		base.OnPopRequested(e);
+	}
+
+	void CreateAndApplyAnimation(NavigationRequestedEventArgs e)
+	{
+		Assert(currentPage is not null);
 		var info = AnimationHelpers.GetInfo(currentPage);
+
+		var animation = e.RequestType == NavigationRequestType.Push ? info.AnimationIn : info.AnimationOut;
 
 		var view = ViewController.View;
 
@@ -44,11 +55,9 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 
 		view.Layer.RemoveAllAnimations();
 
-		view.BuiltInAnimation(info.AnimationOut, null, null, info.Duration);
-		e.Animated = false;
+		e.Animated = info.AnimationIn == TransitionType.Default;
 
-		END:
-		base.OnPopRequested(e);
+		view.SelectAndRunAnimation(animation, info.Duration);
 	}
 
 	protected override void OnPushRequested(NavigationRequestedEventArgs e)
@@ -58,14 +67,7 @@ class ShellTransSectionRenderer : ShellSectionRenderer
 			goto END;
 		}
 
-		var info = AnimationHelpers.GetInfo(currentPage);
-
-		var view = ViewController.View!;
-
-		view.Layer.RemoveAllAnimations();
-
-		view.FlipAnimation(null, null, 1.5);
-		e.Animated = info.AnimationIn != TransitionType.Default;
+		CreateAndApplyAnimation(e);
 
 		END:
 		base.OnPushRequested(e);
