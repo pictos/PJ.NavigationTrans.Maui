@@ -68,10 +68,10 @@ static partial class AnimationHelpers
 				trans.Subtype = CAAnimation.TransitionFromLeft;
 				break;
 			case TransitionType.TopIn:
-			case TransitionType.BottomIn:
+			case TransitionType.BottomOut:
 				trans.Subtype = CAAnimation.TransitionFromBottom;
 				break;
-			case TransitionType.BottomOut:
+			case TransitionType.BottomIn:
 			case TransitionType.TopOut:
 				trans.Subtype = CAAnimation.TransitionFromTop;
 				break;
