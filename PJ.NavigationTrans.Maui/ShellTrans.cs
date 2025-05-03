@@ -1,4 +1,4 @@
-﻿namespace PJ.NavigationTransitions.Maui;
+﻿namespace PJ.NavigationTrans.Maui;
 public static class ShellTrans
 {
 	public static readonly BindableProperty DurationProperty =

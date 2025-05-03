@@ -3,7 +3,7 @@ using CoreAnimation;
 using CoreGraphics;
 using UIKit;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 static partial class AnimationHelpers
 {
 	[OverloadResolutionPriority(0)]

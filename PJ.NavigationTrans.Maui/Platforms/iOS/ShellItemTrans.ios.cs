@@ -4,7 +4,7 @@ using CoreGraphics;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 using UIKit;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 class ShellItemTrans : IShellItemTransition
 {
 	public Task Transition(IShellItemRenderer oldRenderer, IShellItemRenderer newRenderer)

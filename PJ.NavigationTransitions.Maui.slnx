@@ -7,7 +7,7 @@
   <Project Path="PJ.NavigationTrans.Sample/PJ.NavigationTrans.Sample.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="PJ.NavigationTransitions.Maui/PJ.NavigationTransitions.Maui.csproj">
+  <Project Path="PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
 </Solution>

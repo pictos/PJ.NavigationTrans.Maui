@@ -1,6 +1,6 @@
 ﻿using AndroidX.Fragment.App;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 
 sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 {

@@ -1,4 +1,4 @@
-using PJ.NavigationTransitions.Maui;
+using PJ.NavigationTrans.Maui;
 
 namespace PJ.NavigationTrans.Sample;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 
 sealed class ShellTransSectionRenderer : ShellSectionRenderer
 {

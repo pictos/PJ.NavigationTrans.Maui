@@ -3,7 +3,7 @@ using AndroidX.Fragment.App;
 using Android.Graphics.Drawables;
 using AView = Android.Views.View;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 
 static partial class AnimationHelpers
 {
@@ -38,6 +38,7 @@ static partial class AnimationHelpers
 	}
 }
 
+// From .NET MAUI
 static class AndroidHelpers
 {
 	public static FragmentTransaction RemoveEx(this FragmentTransaction fragmentTransaction, Fragment fragment)

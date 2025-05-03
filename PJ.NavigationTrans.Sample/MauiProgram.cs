@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using PJ.NavigationTransitions.Maui;
+using PJ.NavigationTrans.Maui;
 
 namespace PJ.NavigationTrans.Sample;
 public static class MauiProgram

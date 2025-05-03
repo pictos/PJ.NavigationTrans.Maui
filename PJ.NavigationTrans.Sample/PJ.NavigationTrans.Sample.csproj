@@ -60,7 +60,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\PJ.NavigationTransitions.Maui\PJ.NavigationTransitions.Maui.csproj" />
+	  <ProjectReference Include="..\PJ.NavigationTrans.Maui\PJ.NavigationTrans.Maui.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

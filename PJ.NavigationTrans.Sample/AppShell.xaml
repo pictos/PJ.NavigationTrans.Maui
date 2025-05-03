@@ -4,7 +4,7 @@
 	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:local="clr-namespace:PJ.NavigationTrans.Sample"
-	xmlns:trans="clr-namespace:PJ.NavigationTransitions.Maui;assembly=PJ.NavigationTransitions.Maui"
+	xmlns:trans="clr-namespace:PJ.NavigationTrans.Maui;assembly=PJ.NavigationTrans.Maui"
 	Title="PJ.NavigationTrans.Sample"
 	Shell.FlyoutBehavior="Flyout">
 

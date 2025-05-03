@@ -2,7 +2,7 @@
 using Microsoft.Maui.Controls.Platform.Compatibility;
 using Microsoft.Maui.Platform;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 
 public class ShellTransItemRenderer : ShellItemRenderer
 {
@@ -247,32 +247,34 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		}
 	}
 
-	protected override void SetupAnimation(ShellNavigationSource navSource, FragmentTransaction t, Page page)
-	{
-		var duration = ShellTrans.GetDuration(page);
-		var transactionIn = ShellTrans.GetTransitionIn(page);
-		var transactionOut = ShellTrans.GetTransitionOut(page);
 
-		var animationIn = transactionIn.ToPlatform(duration);
-		var animationOut = transactionOut.ToPlatform(duration);
+	// When we change teh `HandleFragmentUpdate` on Maui we can use this
+	//protected override void SetupAnimation(ShellNavigationSource navSource, FragmentTransaction t, Page page)
+	//{
+	//	var duration = ShellTrans.GetDuration(page);
+	//	var transactionIn = ShellTrans.GetTransitionIn(page);
+	//	var transactionOut = ShellTrans.GetTransitionOut(page);
 
-		if (!fragmentMap.TryGetValue(page, out var observableFragment))
-		{
-			observableFragment = fragmentMap[page] = CreateFragmentForPage(page);
-		}
+	//	var animationIn = transactionIn.ToPlatform(duration);
+	//	var animationOut = transactionOut.ToPlatform(duration);
 
-		var fragment = observableFragment.Fragment;
-		var oldFragment = currentFragment?.Fragment;
+	//	if (!fragmentMap.TryGetValue(page, out var observableFragment))
+	//	{
+	//		observableFragment = fragmentMap[page] = CreateFragmentForPage(page);
+	//	}
 
-		if (oldFragment is not null)
-		{
-			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
-			t.RunOnCommit(runnableOut);
-		}
+	//	var fragment = observableFragment.Fragment;
+	//	var oldFragment = currentFragment?.Fragment;
 
-		var runnableIn = new AnimationRunnable(fragment, animationIn.Animation);
-		t.RunOnCommit(runnableIn);
-	}
+	//	if (oldFragment is not null)
+	//	{
+	//		var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
+	//		t.RunOnCommit(runnableOut);
+	//	}
+
+	//	var runnableIn = new AnimationRunnable(fragment, animationIn.Animation);
+	//	t.RunOnCommit(runnableIn);
+	//}
 
 	void RemoveFragment(Fragment fragment)
 	{

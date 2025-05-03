@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Platform.Compatibility;
 
-namespace PJ.NavigationTransitions.Maui;
+namespace PJ.NavigationTrans.Maui;
 public class ShellTransRenderer : ShellRenderer
 {
 	protected override IShellSectionRenderer CreateShellSectionRenderer(ShellSection shellSection)

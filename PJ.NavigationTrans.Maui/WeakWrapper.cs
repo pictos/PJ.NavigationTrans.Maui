@@ -1,4 +1,4 @@
-﻿namespace PJ.NavigationTransitions.Maui;
+﻿namespace PJ.NavigationTrans.Maui;
 
 
 readonly struct WeakWrapper<T> where T : class
