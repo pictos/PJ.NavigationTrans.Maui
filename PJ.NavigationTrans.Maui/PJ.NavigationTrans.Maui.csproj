@@ -39,7 +39,7 @@
     	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<ItemGroup>
-		<SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
+		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 			<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
 				<PrivateAssets>all</PrivateAssets>
 				<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
