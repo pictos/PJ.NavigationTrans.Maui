@@ -9,6 +9,21 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new AppShell());
+		var navPage = new NavigationPage(new MainPage());
+
+		navPage.HandlerChanged += (_, __) =>
+		{
+			if (navPage.Handler is null)
+			{
+				return;
+			}
+
+
+			// iOS Navigation Renderer
+			// Android Navigation Handler
+			_ = navPage.Handler;
+		};
+
+		return new Window(navPage);
 	}
 }

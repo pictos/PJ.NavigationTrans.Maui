@@ -1,4 +1,8 @@
-﻿namespace PJ.NavigationTrans.Maui;
+﻿#if IOS
+using PJ.NavigationTrans.Platforms.iOS.NavigationPage; 
+#endif
+
+namespace PJ.NavigationTrans.Maui;
 
 public static class AppBuilderExtensions
 {
@@ -9,6 +13,9 @@ public static class AppBuilderExtensions
 		{
 			h.AddHandler(typeof(Shell), typeof(ShellTransRenderer));
 
+#if IOS
+			h.AddHandler(typeof(NavigationPage), typeof(NavigationTransRenderer));
+#endif
 		});
 #endif
 
