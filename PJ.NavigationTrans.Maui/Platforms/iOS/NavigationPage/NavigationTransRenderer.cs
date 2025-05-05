@@ -19,7 +19,6 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		base.PushViewController(viewController, animated);
 	}
 
-	//TODO: Implement animation for PopAsync
 	public override UIViewController PopViewController(bool animated)
 	{
 		if (UnsafeAccessorClass.GetUnsafeCurrentPageProperty(this) is Page currentPage)
