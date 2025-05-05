@@ -9,12 +9,18 @@ public partial class NewPage1 : ContentPage
 		InitializeComponent();
 
 		ShellTrans.SetTransitionIn(this, TransitionType.BottomIn);
-		ShellTrans.SetTransitionOut(this, TransitionType.TopOut);
+		ShellTrans.SetTransitionOut(this, TransitionType.BottomOut);
 		ShellTrans.SetDuration(this, 500);
 
 
 		var tap = new TapGestureRecognizer();
-		tap.Tapped += (_, __) => Shell.Current.GoToAsync("..", true);
+		tap.Tapped += (_, __) =>
+		{
+			if (App.IsShell)
+				Shell.Current.GoToAsync("..", true);
+			else
+				Navigation.PopAsync();
+		};
 
 		this.Content.GestureRecognizers.Add(tap);
 	}

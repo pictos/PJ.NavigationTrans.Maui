@@ -1,8 +1,4 @@
-﻿#if IOS
-using PJ.NavigationTrans.Platforms.iOS.NavigationPage; 
-#endif
-
-namespace PJ.NavigationTrans.Maui;
+﻿namespace PJ.NavigationTrans.Maui;
 
 public static class AppBuilderExtensions
 {

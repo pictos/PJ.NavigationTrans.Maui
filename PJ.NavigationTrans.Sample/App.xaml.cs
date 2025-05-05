@@ -2,6 +2,8 @@
 
 public partial class App : Application
 {
+	internal static bool IsShell => Shell.Current is not null;
+
 	public App()
 	{
 		InitializeComponent();
@@ -23,6 +25,11 @@ public partial class App : Application
 			// Android Navigation Handler
 			_ = navPage.Handler;
 		};
+
+		if (IsShell)
+		{
+			return new Window(new AppShell());
+		}
 
 		return new Window(navPage);
 	}
