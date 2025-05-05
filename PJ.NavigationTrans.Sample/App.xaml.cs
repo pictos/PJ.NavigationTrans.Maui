@@ -2,6 +2,8 @@
 
 public partial class App : Application
 {
+	internal static bool IsShell => Shell.Current is not null;
+
 	public App()
 	{
 		InitializeComponent();
@@ -9,6 +11,26 @@ public partial class App : Application
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(new AppShell());
+		var navPage = new NavigationPage(new MainPage());
+
+		navPage.HandlerChanged += (_, __) =>
+		{
+			if (navPage.Handler is null)
+			{
+				return;
+			}
+
+
+			// iOS Navigation Renderer
+			// Android Navigation Handler
+			_ = navPage.Handler;
+		};
+
+		if (IsShell)
+		{
+			return new Window(new AppShell());
+		}
+
+		return new Window(navPage);
 	}
 }

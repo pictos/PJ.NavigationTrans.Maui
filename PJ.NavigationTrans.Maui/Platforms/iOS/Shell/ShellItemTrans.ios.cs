@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using CoreAnimation;
-using CoreGraphics;
-using Microsoft.Maui.Controls.Platform.Compatibility;
+﻿using Microsoft.Maui.Controls.Platform.Compatibility;
 using UIKit;
 
 namespace PJ.NavigationTrans.Maui;
@@ -18,8 +15,8 @@ class ShellItemTrans : IShellItemTransition
 		var oldView = oldRenderer.ViewController.View;
 		var newView = newRenderer.ViewController.View;
 
-		Debug.Assert(oldView is not null);
-		Debug.Assert(newView is not null);
+		Assert(oldView is not null);
+		Assert(newView is not null);
 
 		var animIn = ShellTrans.GetTransitionIn(content);
 

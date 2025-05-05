@@ -7,25 +7,37 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
+	// FlyoutNavigation
 	void Button_Clicked(object sender, EventArgs e)
 	{
-		Shell.Current.GoToAsync("//" + nameof(NewPage1));
+		if (App.IsShell)
+			Shell.Current.GoToAsync("//" + nameof(NewPage1));
+
 	}
 
+	// FlyoutNavigation
 	void Button_Clicked_1(object sender, EventArgs e)
 	{
-		Shell.Current.GoToAsync("//" + nameof(NewPage2));
+		if (App.IsShell)
+			Shell.Current.GoToAsync("//" + nameof(NewPage2));
+
 	}
 
 	void Button_Clicked_2(object sender, EventArgs e)
 	{
+		if (App.IsShell)
+			Shell.Current.GoToAsync(nameof(NewPage1));
+		else
+			Navigation.PushAsync(new NewPage1());
 
-		Shell.Current.GoToAsync(nameof(NewPage1));
 	}
 
 	void Button_Clicked_3(object sender, EventArgs e)
 	{
-		Shell.Current.GoToAsync(nameof(NewPage2));
+		if (App.IsShell)
+			Shell.Current.GoToAsync(nameof(NewPage2));
+		else
+			Navigation.PushAsync(new NewPage2());
 
 	}
 }

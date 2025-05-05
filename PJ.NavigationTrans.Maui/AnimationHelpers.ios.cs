@@ -51,9 +51,8 @@ static partial class AnimationHelpers
 	public static void BuiltInAnimation(this UIView view, TransitionType transition, TaskCompletionSource? tcs, Action? complete, double duration)
 	{
 		var trans = CATransition.CreateAnimation();
+
 		trans.Duration = duration;
-		trans.FadeInDuration = 0f;
-		trans.FadeOutDuration = 0f;
 		trans.RemovedOnCompletion = true;
 		trans.Type = CAAnimation.TransitionPush;
 

@@ -9,6 +9,9 @@ public static class AppBuilderExtensions
 		{
 			h.AddHandler(typeof(Shell), typeof(ShellTransRenderer));
 
+#if IOS
+			h.AddHandler(typeof(NavigationPage), typeof(NavigationTransRenderer));
+#endif
 		});
 #endif
 
