@@ -225,14 +225,14 @@ public class ShellTransItemRenderer : ShellItemRenderer
 	}
 
 
-	void SetupAnimationImpl(FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
+	static void SetupAnimationImpl(FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
 	{
-		var duration = ShellTrans.GetDuration(page);
-		var transactionIn = ShellTrans.GetTransitionIn(page);
-		var transactionOut = ShellTrans.GetTransitionOut(page);
+		var info = AnimationHelpers.GetInfo(page);
 
-		var animationIn = transactionIn.ToPlatform(duration);
-		var animationOut = transactionOut.ToPlatform(duration);
+		var duration = info.Duration;
+		
+		var animationIn = info.AnimationIn.ToPlatform(duration);
+		var animationOut = info.AnimationOut.ToPlatform(duration);
 
 		if (destination is not null)
 		{
