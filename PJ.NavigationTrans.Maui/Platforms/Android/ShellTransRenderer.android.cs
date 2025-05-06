@@ -31,11 +31,13 @@ public partial class ShellTransRenderer : ShellRenderer
 
 			return;
 		}
-		var transitionOut = ShellTrans.GetTransitionOut(shellContent);
-		var duration = ShellTrans.GetDuration(shellContent);
 
-		var animationIn = transitionIn.ToPlatform(duration);
-		var animationOut = transitionOut.ToPlatform(duration);
+		var info = AnimationHelpers.GetInfo(shellContent);
+
+		var duration = info.Duration;
+
+		var animationIn = info.AnimationIn.ToPlatform(duration);
+		var animationOut = info.AnimationOut.ToPlatform(duration);
 
 		var fragmentTransaction = manager.BeginTransaction();
 
@@ -51,7 +53,7 @@ public partial class ShellTransRenderer : ShellRenderer
 		{
 			var runnableOut = new AnimationRunnable(oldFragment, animationOut.Animation);
 			fragmentTransaction.RunOnCommit(runnableOut);
-			runnableOut.Finished = (f) =>
+			runnableOut.OnComplete = (f) =>
 			{
 				fragmentTransaction.RemoveEx(f);
 			};
