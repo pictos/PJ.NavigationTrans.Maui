@@ -43,7 +43,7 @@ jobs:
       run: dotnet restore ${{env.LIB_CSPROJ}}
     
     - name: Restore sample dependencies
-      run: dotnet restore ${{SAMPLE_CSPROJ}}
+      run: dotnet restore ${{ SAMPLE_CSPROJ }}
     
     - name: Build library
       run: dotnet build ${{env.LIB_CSPROJ}} -c Release -p:PackageVersion=${{ env.NugetPackageVersion }} -p:Version=${{ env.NugetPackageVersion }} --no-restore
