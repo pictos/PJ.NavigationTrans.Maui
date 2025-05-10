@@ -10,6 +10,8 @@ on:
       - "**.md"
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+  
 
 env:
     LIB_CSPROJ: PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj
