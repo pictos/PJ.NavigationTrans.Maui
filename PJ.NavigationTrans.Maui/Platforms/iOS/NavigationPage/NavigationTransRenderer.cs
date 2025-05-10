@@ -5,6 +5,7 @@ namespace PJ.NavigationTrans.Maui;
 
 sealed class NavigationTransRenderer : NavigationRenderer
 {
+	bool ignorePopCall;
 	public override void PushViewController(UIViewController viewController, bool animated)
 	{
 		if (UnsafeAccessorClass.GetUnsafeCurrentPageProperty(this) is Page currentPage)
@@ -21,6 +22,7 @@ sealed class NavigationTransRenderer : NavigationRenderer
 
 	public override UIViewController PopViewController(bool animated)
 	{
+		ignorePopCall = true;
 		if (UnsafeAccessorClass.GetUnsafeCurrentPageProperty(this) is Page currentPage)
 		{
 			var fromUIView = VisibleViewController.View;
@@ -30,11 +32,19 @@ sealed class NavigationTransRenderer : NavigationRenderer
 			animated = CreateAndApplyAnimation(currentPage, NavigationRequestType.Pop, fromUIView);
 		}
 
-		return base.PopViewController(animated);
+		var r = base.PopViewController(animated);
+
+		return r;
 	}
 
 	protected override Task<bool> OnPopViewAsync(Page page, bool animated)
 	{
+		if (ignorePopCall)
+		{
+			ignorePopCall = false;
+			return Task.FromResult(true);
+		}
+
 		var fromUIView = VisibleViewController.View;
 
 		Assert(fromUIView is not null);
@@ -75,14 +85,7 @@ sealed class NavigationTransRenderer : NavigationRenderer
 			goto END;
 		}
 
-		if (navigationRequest == NavigationRequestType.Pop)
-		{
-			return HandlePop();
-		}
-		else
-		{
-			return HandlePush();
-		}
+		return navigationRequest == NavigationRequestType.Pop ? HandlePop() : HandlePush();
 
 		END:
 		return false;
@@ -101,13 +104,82 @@ sealed class NavigationTransRenderer : NavigationRenderer
 
 		bool HandlePop()
 		{
+			// Insert the new view behind the current view
 			window.InsertSubview(view, 0);
-			currentView.SelectAndRunAnimation(fromAnimation, info.Duration, () =>
+
+			// Start animations immediately
+			view.SelectAndRunAnimation(fromAnimation, info.Duration);
+			currentView.SelectAndRunAnimation(toAnimation, info.Duration, () =>
 			{
-				
 				currentView.RemoveFromSuperview();
 			});
+
 			return false;
 		}
+	}
+}
+
+
+static class MemoryTest
+{
+	static readonly List<WeakReference<UIView>> weakReferences = [];
+
+	public static int Count => weakReferences.Count;
+
+	public static void Add(UIView obj)
+	{
+		foreach(var item in weakReferences)
+		{
+			if (item.TryGetTarget(out var target) && target == obj)
+			{
+				return;
+			}
+		}
+
+		weakReferences.Add(new(obj));
+		CleanUp();
+	}
+
+	static void CleanUp()
+	{
+		RunGC();
+		for (var i = 0; i < weakReferences.Count; i++)
+		{
+			var item = weakReferences[i];
+
+			if (item.TryGetTarget(out _))
+			{
+			}
+			else
+			{
+				weakReferences.Remove(item);
+			}
+			RunGC();
+		}
+	}
+
+	public static void IsAliveAsync()
+	{
+		RunGC();
+		for (var i = 0; i < weakReferences.Count; i++)
+		{
+			var item = weakReferences[i];
+
+			if (item.TryGetTarget(out var target))
+			{
+			}
+			else
+			{
+				weakReferences.Remove(item);
+			}
+			RunGC();
+		}
+	}
+
+	static void RunGC()
+	{
+		GC.Collect();
+		GC.WaitForPendingFinalizers();
+		GC.Collect();
 	}
 }
