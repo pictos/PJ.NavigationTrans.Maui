@@ -5,7 +5,10 @@ namespace PJ.NavigationTrans.Maui;
 
 sealed class NavigationTransRenderer : NavigationRenderer
 {
+	// Today when the `PopViewCotoller` is called, the `OnPopViewAsync` is called as well causing issues with animation,
+	// for now we just return earlier like the base implementation does. In a future release maybe this is better handled in the base class.
 	bool ignorePopCall;
+
 	public override void PushViewController(UIViewController viewController, bool animated)
 	{
 		if (UnsafeAccessorClass.GetUnsafeCurrentPageProperty(this) is Page currentPage)
@@ -32,9 +35,7 @@ sealed class NavigationTransRenderer : NavigationRenderer
 			animated = CreateAndApplyAnimation(currentPage, NavigationRequestType.Pop, fromUIView);
 		}
 
-		var r = base.PopViewController(animated);
-
-		return r;
+		return base.PopViewController(animated);
 	}
 
 	protected override Task<bool> OnPopViewAsync(Page page, bool animated)
@@ -102,84 +103,16 @@ sealed class NavigationTransRenderer : NavigationRenderer
 			return false;
 		}
 
+
+		// This causes a black background, not sure why it happens, but it is not a big issue.
 		bool HandlePop()
 		{
-			// Insert the new view behind the current view
 			window.InsertSubview(view, 0);
 
-			// Start animations immediately
 			view.SelectAndRunAnimation(fromAnimation, info.Duration);
-			currentView.SelectAndRunAnimation(toAnimation, info.Duration, () =>
-			{
-				currentView.RemoveFromSuperview();
-			});
+			currentView.SelectAndRunAnimation(toAnimation, info.Duration);
 
 			return false;
 		}
-	}
-}
-
-
-static class MemoryTest
-{
-	static readonly List<WeakReference<UIView>> weakReferences = [];
-
-	public static int Count => weakReferences.Count;
-
-	public static void Add(UIView obj)
-	{
-		foreach(var item in weakReferences)
-		{
-			if (item.TryGetTarget(out var target) && target == obj)
-			{
-				return;
-			}
-		}
-
-		weakReferences.Add(new(obj));
-		CleanUp();
-	}
-
-	static void CleanUp()
-	{
-		RunGC();
-		for (var i = 0; i < weakReferences.Count; i++)
-		{
-			var item = weakReferences[i];
-
-			if (item.TryGetTarget(out _))
-			{
-			}
-			else
-			{
-				weakReferences.Remove(item);
-			}
-			RunGC();
-		}
-	}
-
-	public static void IsAliveAsync()
-	{
-		RunGC();
-		for (var i = 0; i < weakReferences.Count; i++)
-		{
-			var item = weakReferences[i];
-
-			if (item.TryGetTarget(out var target))
-			{
-			}
-			else
-			{
-				weakReferences.Remove(item);
-			}
-			RunGC();
-		}
-	}
-
-	static void RunGC()
-	{
-		GC.Collect();
-		GC.WaitForPendingFinalizers();
-		GC.Collect();
 	}
 }
