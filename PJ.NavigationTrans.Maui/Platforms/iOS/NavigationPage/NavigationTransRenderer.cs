@@ -40,6 +40,7 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		Assert(fromUIView is not null);
 
 		animated = CreateAndApplyAnimation(page, NavigationRequestType.Pop, fromUIView);
+
 		return base.OnPopViewAsync(page, animated);
 	}
 
@@ -74,13 +75,39 @@ sealed class NavigationTransRenderer : NavigationRenderer
 			goto END;
 		}
 
-		//Add the currentView into the view in order to animate it.
-		window.InsertSubview(currentView, 1);
-
-		currentView.SelectAndRunAnimation(fromAnimation, info.Duration, currentView.RemoveFromSuperview);
-		view.SelectAndRunAnimation(toAnimation, info.Duration);
+		if (navigationRequest == NavigationRequestType.Pop)
+		{
+			return HandlePop();
+		}
+		else
+		{
+			return HandlePush();
+		}
 
 		END:
 		return false;
+
+
+		bool HandlePush()
+		{
+			window.InsertSubview(currentView, 0);
+			currentView.SelectAndRunAnimation(fromAnimation, info.Duration, () =>
+			{
+				currentView.RemoveFromSuperview();
+			});
+			view.SelectAndRunAnimation(toAnimation, info.Duration);
+			return false;
+		}
+
+		bool HandlePop()
+		{
+			window.InsertSubview(view, 0);
+			currentView.SelectAndRunAnimation(fromAnimation, info.Duration, () =>
+			{
+				
+				currentView.RemoveFromSuperview();
+			});
+			return false;
+		}
 	}
 }
