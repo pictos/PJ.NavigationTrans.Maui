@@ -13,7 +13,13 @@ public partial class NewPage2 : ContentPage
 		ShellTrans.SetDuration(this, 2000);
 
 		var tap = new TapGestureRecognizer();
-		tap.Tapped += (_, __) => Shell.Current.GoToAsync("..", true);
+		tap.Tapped += (_, __) =>
+		{
+			if (App.IsShell)
+				Shell.Current.GoToAsync("..", true);
+			else
+				Navigation.PopAsync();
+		};
 
 		this.Content.GestureRecognizers.Add(tap);
 	}

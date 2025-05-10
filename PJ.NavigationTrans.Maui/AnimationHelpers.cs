@@ -1,4 +1,6 @@
-﻿namespace PJ.NavigationTrans.Maui;
+﻿using System.Runtime.CompilerServices;
+
+namespace PJ.NavigationTrans.Maui;
 
 static partial class AnimationHelpers
 {
@@ -15,4 +17,8 @@ static partial class AnimationHelpers
 
 		return new(duration, animationIn, animationOut);
 	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static bool IsBuiltIn(this TransitionType type) => 
+		!(type is TransitionType.ScaleIn or TransitionType.ScaleOut or TransitionType.FlipIn or TransitionType.FlipOut);
 }

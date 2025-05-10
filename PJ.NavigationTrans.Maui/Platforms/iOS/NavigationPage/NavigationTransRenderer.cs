@@ -54,15 +54,23 @@ sealed class NavigationTransRenderer : NavigationRenderer
 
 		Assert(window is not null);
 
-		// Add the currentView into the view in order to animate it.
-		window.InsertSubview(currentView, 0);
-
 		view.Layer.RemoveAllAnimations();
 		currentView.Layer.RemoveAllAnimations();
+
+		// If we use the Built-In animations, we don't add the `currentView` to the `window`.
+		if (toAnimation.IsBuiltIn() || fromAnimation.IsBuiltIn())
+		{
+			view.SelectAndRunAnimation(toAnimation, info.Duration);
+			goto END;
+		}
+
+		//Add the currentView into the view in order to animate it.
+		window.InsertSubview(currentView, 0);
 
 		currentView.SelectAndRunAnimation(fromAnimation, info.Duration, currentView.RemoveFromSuperview);
 		view.SelectAndRunAnimation(toAnimation, info.Duration);
 
+		END:
 		return false;
 	}
 }

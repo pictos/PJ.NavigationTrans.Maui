@@ -10,7 +10,7 @@ public partial class NewPage1 : ContentPage
 
 		ShellTrans.SetTransitionIn(this, TransitionType.BottomIn);
 		ShellTrans.SetTransitionOut(this, TransitionType.BottomOut);
-		ShellTrans.SetDuration(this, 500);
+		ShellTrans.SetDuration(this, 4500);
 
 
 		var tap = new TapGestureRecognizer();
