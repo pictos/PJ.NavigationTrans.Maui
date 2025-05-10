@@ -33,6 +33,16 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		return base.PopViewController(animated);
 	}
 
+	protected override Task<bool> OnPopViewAsync(Page page, bool animated)
+	{
+		var fromUIView = VisibleViewController.View;
+
+		Assert(fromUIView is not null);
+
+		animated = CreateAndApplyAnimation(page, NavigationRequestType.Pop, fromUIView);
+		return base.OnPopViewAsync(page, animated);
+	}
+
 	bool CreateAndApplyAnimation(Page currentPage, NavigationRequestType navigationRequest, UIView currentView)
 	{
 		var info = AnimationHelpers.GetInfo(currentPage);
@@ -65,7 +75,7 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		}
 
 		//Add the currentView into the view in order to animate it.
-		window.InsertSubview(currentView, 0);
+		window.InsertSubview(currentView, 1);
 
 		currentView.SelectAndRunAnimation(fromAnimation, info.Duration, currentView.RemoveFromSuperview);
 		view.SelectAndRunAnimation(toAnimation, info.Duration);
