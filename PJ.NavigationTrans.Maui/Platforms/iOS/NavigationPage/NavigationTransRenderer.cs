@@ -109,8 +109,8 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		{
 			window.InsertSubview(view, 0);
 
-			view.SelectAndRunAnimation(fromAnimation, info.Duration);
-			currentView.SelectAndRunAnimation(toAnimation, info.Duration);
+			view.SelectAndRunAnimation(toAnimation, info.Duration);
+			currentView.SelectAndRunAnimation(fromAnimation, info.Duration);
 
 			return false;
 		}
