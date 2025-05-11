@@ -18,9 +18,9 @@ class ShellItemTrans : IShellItemTransition
 		Assert(oldView is not null);
 		Assert(newView is not null);
 
-		var animIn = ShellTrans.GetTransitionIn(content);
+		var info = AnimationHelpers.GetInfo(content);
 
-		if (animIn == TransitionType.Default)
+		if (info.AnimationIn == TransitionType.Default || info.AnimationOut == TransitionType.Default)
 		{
 			return DefaultImpl(oldRenderer, newRenderer);
 		}
@@ -28,11 +28,8 @@ class ShellItemTrans : IShellItemTransition
 		oldView.Layer.RemoveAllAnimations();
 		oldView.Superview!.InsertSubviewAbove(newView, oldView);
 
-		var animOut = ShellTrans.GetTransitionOut(content);
-		var duration = ShellTrans.GetDuration(content) / 1_000;
-
-		oldView.SelectAndRunAnimation(animOut, duration, tcs);
-		newView.SelectAndRunAnimation(animIn, duration, tcs);
+		oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, tcs);
+		newView.SelectAndRunAnimation(info.AnimationIn, info.Duration, tcs);
 
 		return tcs.Task;
 	}
