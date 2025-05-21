@@ -1,5 +1,5 @@
 ﻿namespace PJ.NavigationTrans;
-static class Helpers
+static partial class Helpers
 {
 	public static T? GetTargetOrDefault<T>(this WeakReference<T> weak)
 		where T : class
