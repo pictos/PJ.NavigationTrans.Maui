@@ -13,10 +13,10 @@ sealed class StackNavigationManagerTrans : StackNavigationManager
 	// Past most of the code because they are internal, hopefuly will open on .NET 10.
 	public override FragmentNavigator.Destination AddFragmentDestination()
 	{
-		var fragmnetNavigator = UnsafeAccessorClass.GetUnsafeFragmentNavigator(this);
+		var fragmentNavigator = UnsafeAccessorClass.GetUnsafeFragmentNavigator(this);
 		var navGraph = UnsafeAccessorClass.GetUnsafeNavGraph(this);
 
-		var destination = new FragmentNavigator.Destination(fragmnetNavigator);
+		var destination = new FragmentNavigator.Destination(fragmentNavigator);
 		var canonicalName = Java.Lang.Class.FromType(typeof(NavigationViewFragmentTrans)).CanonicalName;
 
 		if (canonicalName is not null)
