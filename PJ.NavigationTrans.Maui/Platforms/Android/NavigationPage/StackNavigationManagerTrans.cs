@@ -10,7 +10,7 @@ sealed class StackNavigationManagerTrans : StackNavigationManager
 	{
 	}
 
-	// Past most of the code because they are internal, hopefuly will open on .NET 10. OR my name isn't Enzo.
+	// Past most of the code because they are internal, hopefuly will open on .NET 10.
 	public override FragmentNavigator.Destination AddFragmentDestination()
 	{
 		var fragmnetNavigator = UnsafeAccessorClass.GetUnsafeFragmentNavigator(this);

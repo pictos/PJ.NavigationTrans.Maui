@@ -23,9 +23,6 @@ class UnsafeAccessorClass
 	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_NavGraph")]
 	public static extern NavGraph GetUnsafeNavGraph(StackNavigationManager stackNavigationManager);
 
-	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_IsPopping")]
-	public static extern ref Nullable<bool> GetUnsafeIsPopping(StackNavigationManager stackNavigationManager);
-
 	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_fragmentManager")]
 	public static extern ref FragmentManager GetSetUnsafeFragmentManager(StackNavigationManager stackNavigationManager);
 	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_fragmentContainerView")]
