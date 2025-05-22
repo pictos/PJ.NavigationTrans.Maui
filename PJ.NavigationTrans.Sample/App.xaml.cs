@@ -2,7 +2,7 @@
 
 public partial class App : Application
 {
-	internal static bool IsShell => Shell.Current is not null;
+	internal static bool IsShell { get; } = false;
 
 	public App()
 	{

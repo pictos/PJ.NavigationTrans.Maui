@@ -15,7 +15,6 @@
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>PJ.NavigationTrans.Sample</RootNamespace>
-		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 
 		<!-- Display name -->
 		<ApplicationTitle>PJ.NavigationTrans.Sample</ApplicationTitle>

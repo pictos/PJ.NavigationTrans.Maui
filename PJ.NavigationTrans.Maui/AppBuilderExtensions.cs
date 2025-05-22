@@ -1,4 +1,8 @@
-﻿namespace PJ.NavigationTrans.Maui;
+﻿#if ANDROID
+using PJ.NavigationTrans.Platforms.Android.NavigationPage;
+#endif
+
+namespace PJ.NavigationTrans.Maui;
 
 public static class AppBuilderExtensions
 {
@@ -11,6 +15,8 @@ public static class AppBuilderExtensions
 
 #if IOS
 			h.AddHandler(typeof(NavigationPage), typeof(NavigationTransRenderer));
+#elif ANDROID
+			NavigationViewHandlerTrans.HackNavigationViewHandler();
 #endif
 		});
 #endif
