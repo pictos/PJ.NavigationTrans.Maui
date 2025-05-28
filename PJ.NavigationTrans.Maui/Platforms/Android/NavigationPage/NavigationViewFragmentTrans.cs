@@ -8,12 +8,10 @@ sealed class NavigationViewFragmentTrans : NavigationViewFragment
 {
 	public override AAnimation OnCreateAnimation(int transit, bool enter, int nextAnim)
 	{
-		var navigationManager = UnsafeAccessorClass.GetStackNavigationManager(this);
+		var navigationManager = (StackNavigationManagerTrans)UnsafeAccessorClass.GetStackNavigationManager(this);
 
-		var page = (ContentPage)navigationManager.CurrentPage;
-
-		var animation = AnimationHelpers.GetInfo(page);
-
+		var animation = navigationManager.TransInfo;
+		
 		if (animation.AnimationIn == TransitionType.Default || animation.AnimationOut == TransitionType.Default)
 		{
 			return base.OnCreateAnimation(transit, enter, nextAnim);
