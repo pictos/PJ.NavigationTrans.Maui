@@ -1,5 +1,5 @@
 ﻿namespace PJ.NavigationTrans.Maui;
-public static class ShellTrans
+public static class NavigationTrans
 {
 	public static readonly BindableProperty DurationProperty =
 		BindableProperty.CreateAttached("Duration", typeof(double), typeof(ShellContent), 500d);

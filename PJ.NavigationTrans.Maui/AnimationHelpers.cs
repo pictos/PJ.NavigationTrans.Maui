@@ -6,19 +6,18 @@ static partial class AnimationHelpers
 {
 	public static TransInfo GetInfo(BindableObject bindable)
 	{
-		var duration = ShellTrans.GetDuration(bindable);
+		var duration = NavigationTrans.GetDuration(bindable);
 
 #if IOS
 		duration /= 1_000;
 #endif
 
-		var animationIn = ShellTrans.GetTransitionIn(bindable);
-		var animationOut = ShellTrans.GetTransitionOut(bindable);
+		var animationIn = NavigationTrans.GetTransitionIn(bindable);
+		var animationOut = NavigationTrans.GetTransitionOut(bindable);
 
 		return new(duration, animationIn, animationOut);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsBuiltIn(this TransitionType type) => 
-		!(type is TransitionType.ScaleIn or TransitionType.ScaleOut or TransitionType.FlipIn or TransitionType.FlipOut);
+	public static bool IsBuiltIn(this TransitionType type) => true;
 }
