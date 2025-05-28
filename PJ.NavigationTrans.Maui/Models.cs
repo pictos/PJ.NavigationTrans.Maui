@@ -5,8 +5,6 @@ public enum TransitionType
 	Default,
 	FadeIn,
 	FadeOut,
-	ScaleIn,
-	ScaleOut,
 	LeftIn, LeftOut,
 	RightIn,
 	RightOut,
@@ -14,8 +12,6 @@ public enum TransitionType
 	TopOut,
 	BottomIn,
 	BottomOut,
-	FlipIn,
-	FlipOut
 }
 
 #if ANDROID

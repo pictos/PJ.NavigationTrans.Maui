@@ -20,9 +20,10 @@ public partial class ShellTransRenderer : ShellRenderer
 	{
 		var previousView = __currentView;
 		var shellContent = newItem.CurrentItem.CurrentItem!;
-		var transitionIn = ShellTrans.GetTransitionIn(shellContent);
+		var info = AnimationHelpers.GetInfo(shellContent);
 
-		if (!animate || transitionIn == TransitionType.Default)
+
+		if (!animate || info.AnimationIn == TransitionType.Default || info.AnimationOut == TransitionType.Default)
 		{
 			base.SwitchFragment(manager, targetView, newItem, false);
 
@@ -31,8 +32,6 @@ public partial class ShellTransRenderer : ShellRenderer
 
 			return;
 		}
-
-		var info = AnimationHelpers.GetInfo(shellContent);
 
 		var duration = info.Duration;
 
@@ -55,7 +54,7 @@ public partial class ShellTransRenderer : ShellRenderer
 			fragmentTransaction.RunOnCommit(runnableOut);
 			runnableOut.OnComplete = (f) =>
 			{
-				fragmentTransaction.RemoveEx(f);
+				fragmentTransaction.HideEx(f);
 			};
 		}
 

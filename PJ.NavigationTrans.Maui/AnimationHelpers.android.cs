@@ -19,11 +19,7 @@ static partial class AnimationHelpers
 		TransitionType.LeftOut => Resource.Animation.exit_left,
 		TransitionType.RightIn => Resource.Animation.enter_right,
 		TransitionType.RightOut => Resource.Animation.exit_right,
-		TransitionType.ScaleIn => Resource.Animation.scale_in,
-		TransitionType.ScaleOut => Resource.Animation.scale_out,
 		TransitionType.Default => Resource.Animation.none,
-		TransitionType.FlipIn => Resource.Animation.flip_in,
-		TransitionType.FlipOut => Resource.Animation.flip_out,
 		_ => Resource.Animation.none,
 	};
 
