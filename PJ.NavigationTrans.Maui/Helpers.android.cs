@@ -7,7 +7,7 @@ namespace PJ.NavigationTrans;
 // A lot of methods from .NET MAUI, that are internals
 partial class Helpers
 {
-	
+
 	public static LayoutInflater GetLayoutInflater(this IMauiContext mauiContext)
 	{
 		var layoutInflater = mauiContext.Services.GetService<LayoutInflater>();

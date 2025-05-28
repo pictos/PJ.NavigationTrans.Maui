@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using AndroidX.Fragment.App;
 using Android.Graphics.Drawables;
+using AndroidX.Fragment.App;
 using AView = Android.Views.View;
 
 namespace PJ.NavigationTrans.Maui;
