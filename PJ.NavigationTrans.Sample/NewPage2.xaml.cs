@@ -8,9 +8,9 @@ public partial class NewPage2 : ContentPage
 	{
 		InitializeComponent();
 
-		ShellTrans.SetTransitionIn(this, TransitionType.ScaleIn);
-		ShellTrans.SetTransitionOut(this, TransitionType.FlipOut);
-		ShellTrans.SetDuration(this, 2000);
+		//ShellTrans.SetTransitionIn(this, TransitionType.ScaleIn);
+		//ShellTrans.SetTransitionOut(this, TransitionType.FlipOut);
+		//ShellTrans.SetDuration(this, 2000);
 
 		var tap = new TapGestureRecognizer();
 		tap.Tapped += (_, __) =>
