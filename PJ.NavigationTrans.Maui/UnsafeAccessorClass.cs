@@ -23,16 +23,12 @@ class UnsafeAccessorClass
 	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_NavGraph")]
 	public static extern NavGraph GetUnsafeNavGraph(StackNavigationManager stackNavigationManager);
 
-	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_fragmentManager")]
-	public static extern ref FragmentManager GetSetUnsafeFragmentManager(StackNavigationManager stackNavigationManager);
-	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_fragmentContainerView")]
-	public static extern ref FragmentContainerView GetSetUnsafeFragmentContainerView(StackNavigationManager stackNavigationManager);
-
 	[UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_stackNavigationManager")]
 	public static extern ref StackNavigationManager GetSetStackNavigationManager(NavigationViewHandler handler);
 
 	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_NavigationManager")]
 	public static extern StackNavigationManager GetStackNavigationManager(NavigationViewFragment stackNavigationManager);
+
 #elif IOS
 	[UnsafeAccessor(UnsafeAccessorKind.Method, Name = "get_Current")]
 	public static extern Page GetUnsafeCurrentPageProperty(NavigationRenderer nav);
