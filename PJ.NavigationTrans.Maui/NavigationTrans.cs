@@ -1,4 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+#if IOS
+using UIKit; 
+#endif
 
 namespace PJ.NavigationTrans.Maui;
 public static class NavigationTrans
@@ -30,6 +33,16 @@ public static class NavigationTrans
 		var value = new AndroidCustomAnimation(duration, transitionIn, transitionOut);
 		PropertyManager.Add(view, value);
 	}
+#elif IOS
+	public static void SetIosTransitions(BindableObject view, Action<UIView> animationIn, Action<UIView>? configurationIn, Action<UIView> animationOut, Action<UIView>? configurationOut, double duration)
+	{
+		RegisterCustomTransitions(view);
+		ArgumentNullException.ThrowIfNull(animationIn, nameof(animationIn));
+		ArgumentNullException.ThrowIfNull(animationOut, nameof(animationOut));
+
+		var value = new IosCustomAnimation(animationIn, configurationIn, animationOut, configurationOut, duration);
+		PropertyManager.Add(view, value);
+	}
 #endif
 
 	static void RegisterCustomTransitions(BindableObject view)
@@ -38,17 +51,17 @@ public static class NavigationTrans
 		SetTransitionOut(view, TransitionType.Custom);
 	}
 
-	public static BaseCustomAnimation? GetAndroidTransitions(BindableObject view) => PropertyManager.Get(view);
+	public static BaseCustomAnimation? GetTransitions(BindableObject view) => PropertyManager.Get(view);
 
 }
 
 static file class PropertyManager
 {
-	static readonly Dictionary<BindableObject, BaseCustomAnimation> properties = [];
+	static readonly ConditionalWeakTable<BindableObject, BaseCustomAnimation> properties = [];
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static void Add(BindableObject key, BaseCustomAnimation value) =>
-		properties[key] = value;
+		properties.AddOrUpdate(key, value);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static BaseCustomAnimation? Get(BindableObject key) =>

@@ -59,13 +59,14 @@ sealed class NavigationTransRenderer : NavigationRenderer
 	{
 		var info = AnimationHelpers.GetInfo(currentPage);
 
-		if (info.AnimationIn == TransitionType.Default)
+		if (info.AnimationIn == TransitionType.Default & info.AnimationOut == TransitionType.Default)
 		{
 			return true;
 		}
 
-		var toAnimation = navigationRequest == NavigationRequestType.Push ? info.AnimationIn : info.AnimationOut;
-		var fromAnimation = navigationRequest != NavigationRequestType.Push ? info.AnimationIn : info.AnimationOut;
+		var isPush = navigationRequest == NavigationRequestType.Push;
+
+		var toAnimation = isPush ? info.AnimationIn : info.AnimationOut;
 
 		var view = ViewController.View;
 
@@ -79,40 +80,20 @@ sealed class NavigationTransRenderer : NavigationRenderer
 		view.Layer.RemoveAllAnimations();
 		currentView.Layer.RemoveAllAnimations();
 
-		// If we use the Built-In animations, we don't add the `currentView` to the `window`.
-		if (toAnimation.IsBuiltIn() || fromAnimation.IsBuiltIn())
+		window.BackgroundColor = UIColor.White;
+
+		var toAnimationIsBuiltIn = toAnimation.IsBuiltIn();
+
+		if (toAnimationIsBuiltIn)
 		{
 			view.SelectAndRunAnimation(toAnimation, info.Duration);
 			goto END;
 		}
 
-		return navigationRequest == NavigationRequestType.Pop ? HandlePop() : HandlePush();
+		var customAnimation = currentPage.ComputeCustomAnimation();
+		view.RunCustomAnimation(customAnimation, AnimationHelpers.EmptyAction, isPush);
 
 		END:
 		return false;
-
-
-		bool HandlePush()
-		{
-			window.InsertSubview(currentView, 0);
-			currentView.SelectAndRunAnimation(fromAnimation, info.Duration, () =>
-			{
-				currentView.RemoveFromSuperview();
-			});
-			view.SelectAndRunAnimation(toAnimation, info.Duration);
-			return false;
-		}
-
-
-		// This causes a black background, not sure why it happens, but it is not a big issue.
-		bool HandlePop()
-		{
-			window.InsertSubview(view, 0);
-
-			view.SelectAndRunAnimation(toAnimation, info.Duration);
-			currentView.SelectAndRunAnimation(fromAnimation, info.Duration);
-
-			return false;
-		}
 	}
 }

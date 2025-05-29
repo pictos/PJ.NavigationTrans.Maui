@@ -4,6 +4,8 @@ namespace PJ.NavigationTrans.Maui;
 
 static partial class AnimationHelpers
 {
+	public static readonly Action EmptyAction = () => { };
+
 	public static TransInfo GetInfo(BindableObject bindable)
 	{
 		var duration = NavigationTrans.GetDuration(bindable);
@@ -19,5 +21,5 @@ static partial class AnimationHelpers
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsBuiltIn(this TransitionType type) => true;
+	public static bool IsBuiltIn(this TransitionType type) => type != TransitionType.Custom;
 }

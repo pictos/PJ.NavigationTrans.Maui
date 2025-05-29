@@ -38,6 +38,35 @@ static partial class AnimationHelpers
 		}
 	}
 
+	public static void RunCustomAnimation(this UIView view, IosCustomAnimation customAnimation, TaskCompletionSource tcs, bool isIn = true)
+	{
+		var config = isIn ? customAnimation.ConfigurationIn : customAnimation.ConfigurationOut;
+		var animation = isIn ? customAnimation.AnimationIn : customAnimation.AnimationOut;
+
+		config?.Invoke(view);
+
+		UIView.Animate(customAnimation.Duration, 0, UIViewAnimationOptions.CurveEaseInOut, () => animation(view), () => tcs.TrySetResult());
+	}
+
+	public static void RunCustomAnimation(this UIView view, IosCustomAnimation customAnimation, Action complete, bool isIn = true)
+	{
+		var config = isIn ? customAnimation.ConfigurationIn : customAnimation.ConfigurationOut;
+		var animation = isIn ? customAnimation.AnimationIn : customAnimation.AnimationOut;
+
+		config?.Invoke(view);
+
+		UIView.Animate(customAnimation.Duration, 0, UIViewAnimationOptions.CurveEaseInOut, () => animation(view), complete);
+	}
+
+	public static IosCustomAnimation ComputeCustomAnimation(this BindableObject bindable)
+	{
+		var animationIos = (IosCustomAnimation?)NavigationTrans.GetTransitions(bindable);
+
+		Assert(animationIos is not null);
+
+		return animationIos;
+	}
+
 	public static void BuiltInAnimation(this UIView view, TransitionType transition, TaskCompletionSource? tcs, Action? complete, double duration)
 	{
 		var trans = CATransition.CreateAnimation();
