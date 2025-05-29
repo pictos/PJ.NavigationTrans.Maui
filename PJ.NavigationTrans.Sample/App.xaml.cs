@@ -2,7 +2,7 @@
 
 public partial class App : Application
 {
-	internal static bool IsShell { get; } = false;
+	internal static bool IsShell { get; } = true;
 
 	public App()
 	{

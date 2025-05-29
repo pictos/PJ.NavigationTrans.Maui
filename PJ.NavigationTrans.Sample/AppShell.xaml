@@ -15,17 +15,17 @@
 
 	<ShellContent
 		Title="Home"
-		trans:ShellTrans.Duration="1000"
-		trans:ShellTrans.TransitionIn="ScaleIn"
-		trans:ShellTrans.TransitionOut="FadeOut"
+		trans:NavigationTrans.Duration="1000"
+		trans:NavigationTrans.TransitionIn="FadeIn"
+		trans:NavigationTrans.TransitionOut="FadeOut"
 		ContentTemplate="{DataTemplate local:NewPage1}"
 		Route="NewPage1" />
 
 	<ShellContent
 		Title="Home"
-		trans:ShellTrans.Duration="1000"
-		trans:ShellTrans.TransitionIn="BottomIn"
-		trans:ShellTrans.TransitionOut="TopOut"
+		trans:NavigationTrans.Duration="1000"
+		trans:NavigationTrans.TransitionIn="BottomIn"
+		trans:NavigationTrans.TransitionOut="TopOut"
 		ContentTemplate="{DataTemplate local:NewPage2}"
 		Route="NewPage2" />
 

@@ -11,7 +11,7 @@ sealed class NavigationViewFragmentTrans : NavigationViewFragment
 		var navigationManager = (StackNavigationManagerTrans)UnsafeAccessorClass.GetStackNavigationManager(this);
 
 		var animation = navigationManager.TransInfo;
-		
+
 		if (animation.AnimationIn == TransitionType.Default || animation.AnimationOut == TransitionType.Default)
 		{
 			return base.OnCreateAnimation(transit, enter, nextAnim);

@@ -31,4 +31,3 @@ sealed class AnimationRunnable : Java.Lang.Object, Java.Lang.IRunnable
 		OnComplete?.Invoke(fragment);
 	}
 }
-

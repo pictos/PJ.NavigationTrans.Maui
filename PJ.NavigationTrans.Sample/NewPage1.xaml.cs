@@ -10,9 +10,9 @@ public partial class NewPage1 : ContentPage
 	{
 		InitializeComponent();
 
-		ShellTrans.SetTransitionIn(this, TransitionType.BottomIn);
-		ShellTrans.SetTransitionOut(this, TransitionType.TopOut);
-		ShellTrans.SetDuration(this, 2500);
+		Maui.NavigationTrans.SetTransitionIn(this, TransitionType.BottomIn);
+		Maui.NavigationTrans.SetTransitionOut(this, TransitionType.TopOut);
+		Maui.NavigationTrans.SetDuration(this, 2500);
 
 		animationIn.ItemsSource = animationOut.ItemsSource = transitions;
 
@@ -49,9 +49,9 @@ class TestTrans : ContentPage
 {
 	public TestTrans(TransitionType animationIn, TransitionType animationOut)
 	{
-		ShellTrans.SetTransitionIn(this, animationIn);
-		ShellTrans.SetTransitionOut(this, animationOut);
-		ShellTrans.SetDuration(this, 2500);
+		Maui.NavigationTrans.SetTransitionIn(this, animationIn);
+		Maui.NavigationTrans.SetTransitionOut(this, animationOut);
+		Maui.NavigationTrans.SetDuration(this, 2500);
 
 
 		var tap = new TapGestureRecognizer();
