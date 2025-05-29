@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace PJ.NavigationTrans.Maui;
 public static class NavigationTrans
@@ -43,12 +42,12 @@ public static class NavigationTrans
 
 }
 
-static class PropertyManager
+static file class PropertyManager
 {
 	static readonly Dictionary<BindableObject, BaseCustomAnimation> properties = [];
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void Add(BindableObject key, BaseCustomAnimation value) => 
+	public static void Add(BindableObject key, BaseCustomAnimation value) =>
 		properties[key] = value;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
