@@ -1,5 +1,3 @@
-using PJ.NavigationTrans.Maui;
-
 namespace PJ.NavigationTrans.Sample;
 
 public partial class NewPage2 : ContentPage
@@ -8,9 +6,9 @@ public partial class NewPage2 : ContentPage
 	{
 		InitializeComponent();
 
-		//ShellTrans.SetTransitionIn(this, TransitionType.ScaleIn);
-		//ShellTrans.SetTransitionOut(this, TransitionType.FlipOut);
-		//ShellTrans.SetDuration(this, 2000);
+#if ANDROID
+		Maui.NavigationTrans.SetAndroidTransitions(this, Resource.Animation.scale_in, Resource.Animation.flip_out, 1500);
+#endif
 
 		var tap = new TapGestureRecognizer();
 		tap.Tapped += (_, __) =>

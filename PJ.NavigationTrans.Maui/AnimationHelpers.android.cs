@@ -26,11 +26,49 @@ static partial class AnimationHelpers
 	public static AnimationInfo ToPlatform(this TransitionType transition, double duration)
 	{
 		var animation = transition.ToPlatform();
+		return CreateAnimation(duration, animation);
+	}
+
+	public static AnimationInfo CreateAnimation(double duration, int animation)
+	{
 		var context = Platform.AppContext ?? throw new NullReferenceException();
+
 		var loadedAnimation = Android.Views.Animations.AnimationUtils.LoadAnimation(context, animation);
-		Debug.Assert(loadedAnimation is not null);
+		Assert(loadedAnimation is not null);
 		loadedAnimation.Duration = (long)duration;
 		return new(animation, loadedAnimation);
+	}
+
+	public static (AnimationInfo animationIn, AnimationInfo animationOut) ComputeAnimationInfo(this BindableObject page, TransInfo? transinfo = null)
+	{
+		transinfo ??= GetInfo(page);
+
+		var info = transinfo.Value;
+
+		var duration = info.Duration;
+
+		var animationIn = GetAnimation(info.AnimationIn, duration, page);
+		var animationOut = GetAnimation(info.AnimationOut, duration, page, false);
+
+		return (animationIn, animationOut);
+
+
+		static AnimationInfo GetAnimation(TransitionType transition, double duration, BindableObject page, bool isIn = true)
+		{
+			if (transition != TransitionType.Custom)
+			{
+				return transition.ToPlatform(duration);
+			}
+
+			var result = (AndroidCustomAnimation?)NavigationTrans.GetAndroidTransitions(page);
+
+			if (result is null)
+			{
+				return TransitionType.Default.ToPlatform(duration);
+			}
+
+			return CreateAnimation(result.Duration, isIn ? result.AnimationIn : result.AnimationOut);
+		}
 	}
 }
 

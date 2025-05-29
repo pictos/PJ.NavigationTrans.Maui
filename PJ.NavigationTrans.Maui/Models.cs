@@ -12,10 +12,15 @@ public enum TransitionType
 	TopOut,
 	BottomIn,
 	BottomOut,
+	Custom
 }
 
 #if ANDROID
 readonly record struct AnimationInfo(int AnimationId, AAnimation Animation);
+record AndroidCustomAnimation(double Duration, int AnimationIn, int AnimationOut) : BaseCustomAnimation(Duration);
 #endif
 
 record struct TransInfo(double Duration, TransitionType AnimationIn, TransitionType AnimationOut);
+
+
+public abstract record BaseCustomAnimation(double Duration);

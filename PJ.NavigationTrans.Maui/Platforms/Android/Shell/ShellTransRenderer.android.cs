@@ -7,9 +7,6 @@ namespace PJ.NavigationTrans.Maui;
 public partial class ShellTransRenderer : ShellRenderer
 {
 	IShellItemRenderer? __currentView;
-	public ShellTransRenderer()
-	{
-	}
 
 	protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
 	{
@@ -33,10 +30,7 @@ public partial class ShellTransRenderer : ShellRenderer
 			return;
 		}
 
-		var duration = info.Duration;
-
-		var animationIn = info.AnimationIn.ToPlatform(duration);
-		var animationOut = info.AnimationOut.ToPlatform(duration);
+		var (animationIn, animationOut) = shellContent.ComputeAnimationInfo(info);
 
 		var fragmentTransaction = manager.BeginTransaction();
 

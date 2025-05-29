@@ -22,10 +22,8 @@
 		Route="NewPage1" />
 
 	<ShellContent
+		x:Name="content"
 		Title="Home"
-		trans:NavigationTrans.Duration="1000"
-		trans:NavigationTrans.TransitionIn="BottomIn"
-		trans:NavigationTrans.TransitionOut="TopOut"
 		ContentTemplate="{DataTemplate local:NewPage2}"
 		Route="NewPage2" />
 
