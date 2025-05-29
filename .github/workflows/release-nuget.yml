@@ -10,6 +10,7 @@ on:
     
 env:
     LIB_CSPROJ: PJ.NavigationTrans.Maui/PJ.NavigationTrans.Maui.csproj
+    PACKAGE_NAME: PJSouzaSoftware.NavigationTrans.Maui
 
 jobs:
   release-nuget:
@@ -26,11 +27,11 @@ jobs:
       id: get_version
       uses: battila7/get-version-action@v2
     - name: Pack
-      run: dotnet pack ${{env.LIB_CSPROJ}} -c Release -p:PackageVersion=${{steps.get_version.outputs.version-without-v}} --output .output --include-symbols --include-source
+      run: dotnet pack ${{env.LIB_CSPROJ}} -c Release -p:PackageVersion=${{steps.get_version.outputs.version-without-v}} --output . --include-symbols --include-source
     - name: Publish
       env:
         API_KEY: ${{secrets.NUGET_KEY}}
       run: |
-        dotnet nuget push .output/*.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json
-        dotnet nuget push .output/*.snupkg --api-key $API_KEY --source https://symbols.nuget.org/
+        dotnet nuget push {{env.PACKAGE_NAME}}.${{ steps.get_version.outputs.version-without-v }}.nupkg --api-key $API_KEY --source https://api.nuget.org/v3/index.json
+        dotnet nuget push {{env.PACKAGE_NAME}}.${{ steps.get_version.outputs.version-without-v }}.snupkg --api-key $API_KEY --source https://symbols.nuget.org/
 
