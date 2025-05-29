@@ -4,6 +4,8 @@ namespace PJ.NavigationTrans.Maui;
 
 static partial class AnimationHelpers
 {
+	public static readonly Action EmptyAction = () => { };
+
 	public static TransInfo GetInfo(BindableObject bindable)
 	{
 		var duration = NavigationTrans.GetDuration(bindable);

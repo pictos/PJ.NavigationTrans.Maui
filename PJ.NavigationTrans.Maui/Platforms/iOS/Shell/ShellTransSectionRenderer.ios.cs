@@ -1,5 +1,4 @@
-﻿using Microsoft.Maui.Controls.Internals;
-using Microsoft.Maui.Controls.Platform.Compatibility;
+﻿using Microsoft.Maui.Controls.Platform.Compatibility;
 
 namespace PJ.NavigationTrans.Maui;
 
@@ -47,7 +46,9 @@ sealed class ShellTransSectionRenderer : ShellSectionRenderer
 		Assert(currentPage is not null);
 		var info = AnimationHelpers.GetInfo(currentPage);
 
-		var animation = e.RequestType == NavigationRequestType.Push ? info.AnimationIn : info.AnimationOut;
+		var isPush = e.RequestType == NavigationRequestType.Push;
+
+		var animation = isPush ? info.AnimationIn : info.AnimationOut;
 
 		var view = ViewController.View;
 
@@ -55,9 +56,19 @@ sealed class ShellTransSectionRenderer : ShellSectionRenderer
 
 		view.Layer.RemoveAllAnimations();
 
+		var isBuiltIn = animation.IsBuiltIn();
+
 		e.Animated = info.AnimationIn == TransitionType.Default;
 
-		view.SelectAndRunAnimation(animation, info.Duration);
+		if (isBuiltIn)
+		{
+			view.SelectAndRunAnimation(animation, info.Duration);
+		}
+		else
+		{
+			var customAnimation = currentPage.ComputeCustomAnimation();
+			view.RunCustomAnimation(customAnimation, AnimationHelpers.EmptyAction, isPush);
+		}
 	}
 
 	protected override void OnPushRequested(NavigationRequestedEventArgs e)

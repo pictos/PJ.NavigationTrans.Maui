@@ -58,6 +58,14 @@ static partial class AnimationHelpers
 		UIView.Animate(customAnimation.Duration, 0, UIViewAnimationOptions.CurveEaseInOut, () => animation(view), complete);
 	}
 
+	public static void RunCustomAnimation(this UIView view, IosCustomAnimation customAnimation, bool isIn = true)
+	{
+		var config = isIn ? customAnimation.ConfigurationIn : customAnimation.ConfigurationOut;
+		var animation = isIn ? customAnimation.AnimationIn : customAnimation.AnimationOut;
+
+		config?.Invoke(view);
+	}
+
 	public static IosCustomAnimation ComputeCustomAnimation(this BindableObject bindable)
 	{
 		var animationIos = (IosCustomAnimation?)NavigationTrans.GetTransitions(bindable);
