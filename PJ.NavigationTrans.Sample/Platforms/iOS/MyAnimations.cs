@@ -68,20 +68,6 @@ static class MyAnimations
 
 	}
 
-
-	public static void GenericAnimation(Action<UIView> animation, Action<UIView>? configuration)
-	{
-		ArgumentNullException.ThrowIfNull(animation, nameof(animation));
-		//ArgumentNullException.ThrowIfNull(view, nameof(view));
-
-		//configuration?.Invoke(view);
-		//var duration = 2;
-		//UIView.Animate(duration, () => animation(view), () => 
-		//{
-		//	// completion
-		//});
-	}
-
 	public static void ConfigScaleAnimation(UIView view)
 	{
 		view.Alpha = 0.0f;
