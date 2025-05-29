@@ -1,4 +1,7 @@
-﻿namespace PJ.NavigationTrans.Maui;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+
+namespace PJ.NavigationTrans.Maui;
 public static class NavigationTrans
 {
 	public static readonly BindableProperty DurationProperty =
@@ -20,4 +23,35 @@ public static class NavigationTrans
 
 	public static TransitionType GetTransitionOut(BindableObject view) => (TransitionType)view.GetValue(TransitionOutProperty);
 	public static void SetTransitionOut(BindableObject view, TransitionType value) => view.SetValue(TransitionOutProperty, value);
+
+#if ANDROID
+	public static void SetAndroidTransitions(BindableObject view, int transitionIn, int transitionOut, double duration)
+	{
+		RegisterCustomTransitions(view);
+		var value = new AndroidCustomAnimation(duration, transitionIn, transitionOut);
+		PropertyManager.Add(view, value);
+	}
+#endif
+
+	static void RegisterCustomTransitions(BindableObject view)
+	{
+		SetTransitionIn(view, TransitionType.Custom);
+		SetTransitionOut(view, TransitionType.Custom);
+	}
+
+	public static BaseCustomAnimation? GetAndroidTransitions(BindableObject view) => PropertyManager.Get(view);
+
+}
+
+static class PropertyManager
+{
+	static readonly Dictionary<BindableObject, BaseCustomAnimation> properties = [];
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void Add(BindableObject key, BaseCustomAnimation value) => 
+		properties[key] = value;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static BaseCustomAnimation? Get(BindableObject key) =>
+		properties.TryGetValue(key, out var value) ? value : null;
 }

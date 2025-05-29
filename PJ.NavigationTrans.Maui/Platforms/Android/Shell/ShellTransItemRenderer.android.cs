@@ -25,64 +25,64 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		switch (navSource)
 		{
 			case ShellNavigationSource.Push:
+			{
+				fragmentMap.TryAdd(page, CreateFragmentForPage(page));
+				if (!isForCurrentTab)
 				{
-					fragmentMap.TryAdd(page, CreateFragmentForPage(page));
-					if (!isForCurrentTab)
-					{
-						return Task.FromResult(true);
-					}
-					break;
+					return Task.FromResult(true);
 				}
+				break;
+			}
 			case ShellNavigationSource.Pop:
+			{
+				if (fragmentMap.TryGetValue(page, out var frag))
 				{
-					if (fragmentMap.TryGetValue(page, out var frag))
+					if (!isForCurrentTab && ChildFragmentManager.Contains(frag.Fragment))
 					{
-						if (!isForCurrentTab && ChildFragmentManager.Contains(frag.Fragment))
-						{
-							RemoveFragment(frag.Fragment);
-						}
-						fragmentMap.Remove(page);
+						RemoveFragment(frag.Fragment);
 					}
+					fragmentMap.Remove(page);
+				}
 
-					if (!isForCurrentTab)
-					{
-						return Task.FromResult(true);
-					}
-					break;
+				if (!isForCurrentTab)
+				{
+					return Task.FromResult(true);
 				}
+				break;
+			}
 			case ShellNavigationSource.PopToRoot:
+			{
+				RemoveAllPushedPages(shellSection, isForCurrentTab);
+				if (!isForCurrentTab)
 				{
-					RemoveAllPushedPages(shellSection, isForCurrentTab);
-					if (!isForCurrentTab)
-					{
-						return Task.FromResult(true);
-					}
-					break;
+					return Task.FromResult(true);
 				}
+				break;
+			}
 			case ShellNavigationSource.Insert:
+			{
+				if (!isForCurrentTab)
 				{
-					if (!isForCurrentTab)
-					{
-						return Task.FromResult(true);
-					}
-					break;
+					return Task.FromResult(true);
 				}
+				break;
+			}
 			case ShellNavigationSource.Remove:
+			{
+				if (fragmentMap.TryGetValue(page, out var frag))
 				{
-					if (fragmentMap.TryGetValue(page, out var frag))
+					if (!isForCurrentTab && frag != currentFragment && ChildFragmentManager.Contains(frag.Fragment))
 					{
-						if (!isForCurrentTab && frag != currentFragment && ChildFragmentManager.Contains(frag.Fragment))
-						{
-							RemoveFragment(frag.Fragment);
-						}
-						fragmentMap.Remove(page);
+						RemoveFragment(frag.Fragment);
 					}
-					if (!isForCurrentTab)
-					{
-						return Task.FromResult(true);
-					}
-					break;
+					fragmentMap.Remove(page);
 				}
+				if (!isForCurrentTab)
+				{
+					return Task.FromResult(true);
+				}
+				break;
+			}
 			case ShellNavigationSource.ShellSectionChanged:
 				break;
 			default:
@@ -130,63 +130,63 @@ public class ShellTransItemRenderer : ShellItemRenderer
 		switch (navSource)
 		{
 			case ShellNavigationSource.Push:
+			{
+				trackFragment = target;
+
+				if (currentFragment is not null)
 				{
-					trackFragment = target;
-
-					if (currentFragment is not null)
-					{
-						t.HideEx(currentFragment.Fragment);
-					}
-
-					if (!ChildFragmentManager.Contains(target.Fragment))
-					{
-						t.AddEx(GetNavigationTarget().Id, target.Fragment);
-					}
-
-					t.ShowEx(target.Fragment);
-					break;
+					t.HideEx(currentFragment.Fragment);
 				}
+
+				if (!ChildFragmentManager.Contains(target.Fragment))
+				{
+					t.AddEx(GetNavigationTarget().Id, target.Fragment);
+				}
+
+				t.ShowEx(target.Fragment);
+				break;
+			}
 
 			case ShellNavigationSource.ShellSectionChanged:
+			{
+				if (currentFragment is not null)
 				{
-					if (currentFragment is not null)
-					{
-						t.HideEx(currentFragment.Fragment);
-					}
-
-					if (!ChildFragmentManager.Contains(target.Fragment))
-					{
-						t.AddEx(GetNavigationTarget().Id, target.Fragment);
-					}
-
-					t.ShowEx(target.Fragment);
-
-					break;
+					t.HideEx(currentFragment.Fragment);
 				}
+
+				if (!ChildFragmentManager.Contains(target.Fragment))
+				{
+					t.AddEx(GetNavigationTarget().Id, target.Fragment);
+				}
+
+				t.ShowEx(target.Fragment);
+
+				break;
+			}
 
 			case ShellNavigationSource.Pop:
 			case ShellNavigationSource.PopToRoot:
 			case ShellNavigationSource.Remove:
+			{
+				isNavBack = true;
+				trackFragment = currentFragment;
+
+				if (currentFragment is not null)
 				{
-					isNavBack = true;
-					trackFragment = currentFragment;
-
-					if (currentFragment is not null)
-					{
-						// Do not use Remove here,
-						// or the Fragment will be destroyed before the animation completes
-						t.HideEx(currentFragment.Fragment);
-					}
-
-					if (!ChildFragmentManager.Contains(target.Fragment))
-					{
-						t.AddEx(GetNavigationTarget().Id, target.Fragment);
-					}
-
-					t.ShowEx(target.Fragment);
-
-					break;
+					// Do not use Remove here,
+					// or the Fragment will be destroyed before the animation completes
+					t.HideEx(currentFragment.Fragment);
 				}
+
+				if (!ChildFragmentManager.Contains(target.Fragment))
+				{
+					t.AddEx(GetNavigationTarget().Id, target.Fragment);
+				}
+
+				t.ShowEx(target.Fragment);
+
+				break;
+			}
 		}
 		t.CommitAllowingStateLossEx();
 
@@ -227,12 +227,7 @@ public class ShellTransItemRenderer : ShellItemRenderer
 
 	static void SetupAnimationImpl(FragmentTransaction t, Page page, Fragment? destination, Fragment? originFragment)
 	{
-		var info = AnimationHelpers.GetInfo(page);
-
-		var duration = info.Duration;
-
-		var animationIn = info.AnimationIn.ToPlatform(duration);
-		var animationOut = info.AnimationOut.ToPlatform(duration);
+		var (animationIn, animationOut) = page.ComputeAnimationInfo();
 
 		if (destination is not null)
 		{
