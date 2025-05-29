@@ -19,5 +19,5 @@ static partial class AnimationHelpers
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool IsBuiltIn(this TransitionType type) => true;
+	public static bool IsBuiltIn(this TransitionType type) => type != TransitionType.Custom;
 }

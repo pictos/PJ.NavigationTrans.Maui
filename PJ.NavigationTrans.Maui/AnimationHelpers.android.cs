@@ -60,7 +60,7 @@ static partial class AnimationHelpers
 				return transition.ToPlatform(duration);
 			}
 
-			var result = (AndroidCustomAnimation?)NavigationTrans.GetAndroidTransitions(page);
+			var result = (AndroidCustomAnimation?)NavigationTrans.GetTransitions(page);
 
 			if (result is null)
 			{

@@ -1,11 +1,12 @@
 ﻿using CoreAnimation;
 using CoreGraphics;
+using Microsoft.Maui.Controls;
 using UIKit;
 
 namespace PJ.NavigationTrans.Sample.Platforms.iOS;
 static class MyAnimations
 {
-	public static void FadeAnimation(this UIView view, TaskCompletionSource? tcs, double duration = 1.0)
+	public static void FadeAnimation(this UIView view, TaskCompletionSource? tcs, Action? complete, double duration = 1.0)
 	{
 		view.Alpha = 0.0f;
 		view.Transform = CGAffineTransform.MakeIdentity();
@@ -17,6 +18,27 @@ static class MyAnimations
 			},
 			() => tcs?.TrySetResult()
 		);
+	}
+
+	public static void ConfigFlipAnimation(UIView view)
+	{
+		var m34 = (nfloat)(-1 * 0.001);
+		var initialTransform = CATransform3D.Identity;
+		initialTransform.M34 = m34;
+		initialTransform = initialTransform.Rotate((nfloat)(1 * Math.PI * 0.5), 0.0f, 1.0f, 0.0f);
+
+		view.Alpha = 0.0f;
+		view.Layer.Transform = initialTransform;
+	}
+
+	public static void FlipAnimation(UIView view)
+	{
+		var m34 = (nfloat)(-1 * 0.001);
+		view.Layer.AnchorPoint = new CGPoint((nfloat)0.5, 0.5f);
+		var newTransform = CATransform3D.Identity;
+		newTransform.M34 = m34;
+		view.Layer.Transform = newTransform;
+		view.Alpha = 1.0f;
 	}
 
 	public static void FlipAnimation(this UIView view, TaskCompletionSource? tcs, Action? complete, double duration = 0.5)
@@ -43,6 +65,33 @@ static class MyAnimations
 				complete?.Invoke();
 			}
 		);
+
+	}
+
+
+	public static void GenericAnimation(Action<UIView> animation, Action<UIView>? configuration)
+	{
+		ArgumentNullException.ThrowIfNull(animation, nameof(animation));
+		//ArgumentNullException.ThrowIfNull(view, nameof(view));
+
+		//configuration?.Invoke(view);
+		//var duration = 2;
+		//UIView.Animate(duration, () => animation(view), () => 
+		//{
+		//	// completion
+		//});
+	}
+
+	public static void ConfigScaleAnimation(UIView view)
+	{
+		view.Alpha = 0.0f;
+		view.Transform = CGAffineTransform.MakeScale((nfloat)0.5, (nfloat)0.5);
+	}
+
+	public static void ScaleAnimation(UIView view)
+	{
+		view.Alpha = 1.0f;
+		view.Transform = CGAffineTransform.MakeScale((nfloat)1.0, (nfloat)1.0);
 	}
 
 	public static void ScaleAnimation(this UIView view, TaskCompletionSource? tcs, Action? complete, double duration = 0.5)

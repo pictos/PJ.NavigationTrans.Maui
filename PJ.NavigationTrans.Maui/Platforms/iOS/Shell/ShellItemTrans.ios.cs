@@ -28,9 +28,38 @@ class ShellItemTrans : IShellItemTransition
 		oldView.Layer.RemoveAllAnimations();
 		oldView.Superview!.InsertSubviewAbove(newView, oldView);
 
-		oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, tcs);
-		newView.SelectAndRunAnimation(info.AnimationIn, info.Duration, tcs);
+		var isInBuiltIn = info.AnimationIn.IsBuiltIn();
+		var isOutBuiltIn = info.AnimationOut.IsBuiltIn();
 
+		if (isInBuiltIn & isOutBuiltIn)
+		{
+			oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, tcs);
+			newView.SelectAndRunAnimation(info.AnimationIn, info.Duration, tcs);
+			goto END;
+		}
+
+		var iosCustomAnimation = content.ComputeCustomAnimation();
+
+		if (isOutBuiltIn)
+		{
+			oldView.SelectAndRunAnimation(info.AnimationOut, info.Duration, tcs);
+		}
+		else
+		{
+			oldView.RunCustomAnimation(iosCustomAnimation, tcs, false);
+		}
+
+		if (isInBuiltIn)
+		{
+			newView.SelectAndRunAnimation(info.AnimationIn, info.Duration, tcs);
+		}
+		else
+		{
+			newView.RunCustomAnimation(iosCustomAnimation, tcs);
+		}
+
+
+		END:
 		return tcs.Task;
 	}
 
