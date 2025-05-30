@@ -109,7 +109,11 @@ public partial class YourPage : ContentPage
     }
 }
 ```
+## Credits
 
+The built-in animations, for Android and iOS, in this library are implementations from:
+- https://github.com/pabloprogramador/CustomShellMaui
+- https://github.com/jsuarezruiz/xamarin-forms-page-transitions/tree/master
 
 ## Support
 
