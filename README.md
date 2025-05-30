@@ -1,6 +1,7 @@
 # PJ.NavigationTrans.Maui 🏳️‍⚧️
 
-This is a library that allows you to use custom animations during Flyout navigations and Push navigations using Shell.
+This is a library that allows you to use custom animations during Flyout navigations and Push navigations using Shell or NavigationPage.
+Be aware that transition respects the behavior of the native platform, so they may look different between OSes.
 
 
 
