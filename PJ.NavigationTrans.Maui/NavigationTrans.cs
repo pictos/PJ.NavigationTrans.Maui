@@ -96,7 +96,7 @@ public static class NavigationTrans
 	/// <param name="view">The <see cref="BindableObject"/> representing the view to apply the transitions to. Cannot be null.</param>
 	/// <param name="transitionIn">The animation resource ID for the transition-in effect.</param>
 	/// <param name="transitionOut">The animation resource ID for the transition-out effect.</param>
-	/// <param name="duration">The duration of the transition animations, in seconds. Must be greater than or equal to 0.</param>
+	/// <param name="duration">The duration of the transition animations, in milliseconds. Must be greater than or equal to 0.</param>
 	public static void SetAndroidTransitions(BindableObject view, int transitionIn, int transitionOut, double duration)
 	{
 		RegisterCustomTransitions(view);
