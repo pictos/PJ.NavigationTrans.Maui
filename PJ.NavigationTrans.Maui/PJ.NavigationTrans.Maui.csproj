@@ -21,9 +21,9 @@
 		<Description>This project allows you to use custom animatinos during navigation in .NET MAUI</Description>
 
 		<PackageTags>.NET MAUI, Navigation, Animation</PackageTags>
-
 		<PackageId>PJSouzaSoftware.NavigationTrans.Maui</PackageId>
 
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/pictos/PJ.NavigationTrans.Maui/</RepositoryUrl>
 		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
 		<Product>NavigationTrans.Maui</Product>
@@ -33,11 +33,11 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    	<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+			<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<SourceRoot Include="$(MSBuildThisFileDirectory)/" />
@@ -49,5 +49,9 @@
 
 	<ItemGroup Condition="$(IsAndroid)">
 		<AndroidResource Include="Platforms\Android\Resources\anim\**\*.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 </Project>
