@@ -2,6 +2,10 @@
 
 This is a library that allows you to use custom animations during Flyout navigations and Push navigations using Shell.
 
+
+
+* Available on NuGet: [![NuGet](https://img.shields.io/nuget/v/PJSouzaSoftware.NavigationTrans.Maui.svg?label=NuGet)](https://www.nuget.org/packages/PJSouzaSoftware.NavigationTrans.Maui/)
+
 ## Basic Usage
 
 You can add transitions to your Shell content using XAML:
