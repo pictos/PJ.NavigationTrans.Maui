@@ -109,9 +109,9 @@ public static class NavigationTrans
 	/// </summary>
 	/// <param name="view">The <see cref="Page"/> or <see cref="ShellContent"/> that will be animated.</param>
 	/// <param name="animationIn">Code that describes animation for entering the page.</param>
-	/// <param name="configurationIn">Code that describes the configuration for the view that will animated.</param>
+	/// <param name="configurationIn">Code that describes the configuration for the view that will be animated.</param>
 	/// <param name="animationOut">Code that describes animation for leaving the page.</param>
-	/// <param name="configurationOut">Code that describes the configuration for the view that will animated.</param>
+	/// <param name="configurationOut">Code that describes the configuration for the view that will be animated.</param>
 	/// <param name="duration">Animation duration in milliseconds.</param>
 	public static void SetIosTransitions(BindableObject view, Action<UIView> animationIn, Action<UIView>? configurationIn, Action<UIView> animationOut, Action<UIView>? configurationOut, double duration)
 	{
