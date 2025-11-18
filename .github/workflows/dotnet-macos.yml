@@ -40,7 +40,7 @@ jobs:
       run: dotnet restore ${{env.SAMPLE_CSPROJ}}
     
     - name: Build library
-      run: dotnet build ${{env.LIB_CSPROJ}} -c Release -f net9.0-ios --no-restore
+      run: dotnet build ${{env.LIB_CSPROJ}} -c Release -f net10.0-ios --no-restore
     
     - name: Build Sample app
-      run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release -f net9.0-ios  --no-restore
+      run: dotnet build ${{env.SAMPLE_CSPROJ}} -c Release -f net10.0-ios  --no-restore
