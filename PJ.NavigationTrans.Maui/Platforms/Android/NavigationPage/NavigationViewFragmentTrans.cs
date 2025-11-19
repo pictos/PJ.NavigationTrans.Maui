@@ -6,6 +6,8 @@ namespace PJ.NavigationTrans.Platforms.Android.NavigationPage;
 
 sealed class NavigationViewFragmentTrans : NavigationViewFragment
 {
+	// TODO Try the OnCreateAnimator method instead.
+	// https://github.com/dotnet/maui/issues/21187
 	public override AAnimation OnCreateAnimation(int transit, bool enter, int nextAnim)
 	{
 		var navigationManager = (StackNavigationManagerTrans)UnsafeAccessorClass.GetStackNavigationManager(this);
